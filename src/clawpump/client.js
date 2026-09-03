@@ -43,14 +43,38 @@ export class ClawPumpError extends Error {
   constructor(message, options = {}) {
     super(message, options);
     this.name = "ClawPumpError";
+    this.retry = options.retry;
+    this.agentId = options.agentId;
   }
 }
 
 export async function launchAgent(input, options = {}) {
   const run = options.run ?? runCommand;
   const command = options.command ?? "npx";
-  const result = await run(command, toClawPumpArgs(input), options);
-  return parseLaunchOutput(result.stdout);
+  let result;
+  try {
+    result = await run(command, toClawPumpArgs(input), options);
+  } catch (error) {
+    if (error?.code === "ENOENT") {
+      throw new ClawPumpError("Node.js/npm could not find npx. Install Node.js 20+ and retry.", { cause: error });
+    }
+    throw new ClawPumpError(`Unable to start ClawPump: ${error.message}`, { cause: error });
+  }
+
+  let launch;
+  try {
+    launch = parseLaunchOutput(result.stdout);
+  } catch (error) {
+    const detail = result.stderr.trim();
+    throw new ClawPumpError(detail || error.message, { cause: error });
+  }
+  if (result.code !== 0 || launch.status !== "launched" || !launch.tokenMint) {
+    throw new ClawPumpError(
+      launch.raw?.message || launch.raw?.error || "ClawPump did not complete the token launch.",
+      { retry: launch.raw?.retry, agentId: launch.agentId },
+    );
+  }
+  return launch;
 }
 
 function runCommand(command, args, options = {}) {
