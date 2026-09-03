@@ -4,10 +4,14 @@
   "private": true,
   "description": "Thin agent onboarding for ClawPump",
   "type": "module",
+  "bin": {
+    "rappen": "src/cli.js"
+  },
   "engines": {
     "node": ">=20"
   },
   "scripts": {
+    "onboard": "node src/cli.js onboard",
     "test": "node --test"
   },
   "license": "MIT"
