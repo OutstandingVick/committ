@@ -45,3 +45,25 @@ export class ClawPumpError extends Error {
     this.name = "ClawPumpError";
   }
 }
+
+export async function launchAgent(input, options = {}) {
+  const run = options.run ?? runCommand;
+  const command = options.command ?? "npx";
+  const result = await run(command, toClawPumpArgs(input), options);
+  return parseLaunchOutput(result.stdout);
+}
+
+function runCommand(command, args, options = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, {
+      env: options.env ?? process.env,
+      stdio: ["inherit", "pipe", "pipe"],
+    });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => { stdout += chunk; });
+    child.stderr.on("data", (chunk) => { stderr += chunk; });
+    child.once("error", reject);
+    child.once("close", (code) => resolve({ code, stdout, stderr }));
+  });
+}
