@@ -1,0 +1,8 @@
+{
+  "name": "Atlas",
+  "description": "Autonomous DeFi research agent.",
+  "ticker": "ATLAS",
+  "endpoint": "https://atlas.example/api",
+  "website": "https://atlas.example",
+  "twitter": "https://x.com/atlasagent"
+}
