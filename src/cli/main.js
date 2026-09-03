@@ -33,5 +33,12 @@ export async function main(argv = process.argv.slice(2), io = {}) {
   }
 
   output.write(`Launching ${input.name} through ClawPump...\n`);
-  return onboardAgent(input, io.dependencies);
+  const record = await onboardAgent(input, io.dependencies);
+  output.write("\nAgent onboarded successfully.\n\n");
+  output.write(`Token: $${record.tokenSymbol}\nMint: ${record.tokenMint}\n`);
+  if (record.agentId) output.write(`ClawPump agent: ${record.agentId}\n`);
+  if (record.dashboardUrl) output.write(`ClawPump: ${record.dashboardUrl}\n`);
+  if (record.pumpUrl) output.write(`pump.fun: ${record.pumpUrl}\n`);
+  output.write("\nSaved to data/onboarded-agents.json\n");
+  return record;
 }
