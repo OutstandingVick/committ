@@ -29,9 +29,25 @@ export function validateInput(value) {
   if (input.ticker && !/^[A-Z0-9]{1,10}$/.test(input.ticker)) {
     issues.push("Ticker must contain 1-10 letters or digits.");
   }
+  for (const [label, candidate] of [
+    ["Endpoint", input.endpoint],
+    ["Website", input.website],
+    ["X/Twitter", input.twitter],
+  ]) {
+    if (candidate && !isHttpUrl(candidate)) issues.push(`${label} must be a valid http(s) URL.`);
+  }
 
   if (issues.length) throw new ValidationError(issues);
   return input;
+}
+
+function isHttpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
 }
 
 function cleanOptional(value) {
