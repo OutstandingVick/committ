@@ -36,6 +36,10 @@ export function prepareDeployment(input: PrepareInput): DeploymentPlan {
     throw new CommittError('INVALID_PROGRAM_CONFIG', 'The configured tip-jar program address is invalid.', 500);
   }
 
+  const blink = new URL('/api/actions/tip-jar', input.origin);
+  blink.searchParams.set('repo', repo.canonicalUrl);
+  if (authority) blink.searchParams.set('authority', authority);
+
   return {
     analysisId: input.analysisId,
     cluster: 'devnet',
@@ -47,7 +51,7 @@ export function prepareDeployment(input: PrepareInput): DeploymentPlan {
     explorerUrl: programId
       ? `https://explorer.solana.com/address/${programId}?cluster=devnet`
       : null,
-    blinkUrl: `${input.origin}/api/actions/tip-jar?repo=${encodeURIComponent(repo.canonicalUrl)}`,
+    blinkUrl: blink.toString(),
     checks: [
       'Target cluster is devnet.',
       'Template came from the fixed Committ registry.',

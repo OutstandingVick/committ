@@ -1,14 +1,21 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { useWalletConnection } from '@solana/react-hooks';
+import { FormEvent, useEffect, useState } from 'react';
 import type { AnalysisResult, ApiErrorBody, DeploymentPlan } from '../src/domain/committ';
+import { BlinkTransaction } from './BlinkTransaction';
 
 export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
+  const wallet = useWalletConnection();
   const [authority, setAuthority] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const [plan, setPlan] = useState<DeploymentPlan | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!authority && wallet.wallet?.account.address) setAuthority(wallet.wallet.account.address);
+  }, [authority, wallet.wallet?.account.address]);
 
   async function prepare(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -41,10 +48,10 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
       <div className="review-copy">
         <span className="report-kicker">Human checkpoint</span>
         <h3 id="review-title">Review before anything touches chain.</h3>
-        <p>This prepares a devnet plan only. It does not sign, spend, or launch a token.</p>
+        <p>This prepares a devnet transaction path. Your wallet reviews and signs every transaction.</p>
       </div>
       <form onSubmit={prepare}>
-        <label htmlFor="authority">Authority wallet <span>optional for dry run</span></label>
+        <label htmlFor="authority">Authority wallet <span>filled from your connected wallet</span></label>
         <input id="authority" value={authority} onChange={(event) => setAuthority(event.target.value)} placeholder="Solana address" />
         <label className="confirmation-row">
           <input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} />
@@ -66,6 +73,7 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
             <p>ClawPump requires a separate irreversible-action confirmation.</p>
           </div>
           {plan.explorerUrl ? <a href={plan.explorerUrl} target="_blank" rel="noreferrer">Open Solana Explorer ↗</a> : null}
+          {plan.status === 'ready-for-wallet' ? <BlinkTransaction blinkUrl={plan.blinkUrl} /> : null}
         </div>
       ) : null}
     </section>
