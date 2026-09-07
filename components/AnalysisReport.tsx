@@ -1,4 +1,5 @@
 import type { AnalysisResult } from '../src/domain/committ';
+import { AgentLog } from './AgentLog';
 
 export function AnalysisReport({ result }: { result: AnalysisResult }) {
   const confidence = Math.round(result.classification.confidence * 100);
@@ -32,6 +33,7 @@ export function AnalysisReport({ result }: { result: AnalysisResult }) {
         <span>{result.snapshot.files.length} safe files read</span>
         <span>{result.snapshot.truncated ? 'Read budget reached' : 'Within read budget'}</span>
       </div>
+      <AgentLog entries={result.logs} />
     </section>
   );
 }
