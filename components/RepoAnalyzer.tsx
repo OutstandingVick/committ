@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import type { AnalysisResult, ApiErrorBody } from '../src/domain/committ';
+import { AnalysisReport } from './AnalysisReport';
 
 export function RepoAnalyzer() {
   const [repoUrl, setRepoUrl] = useState('');
@@ -58,12 +59,7 @@ export function RepoAnalyzer() {
         <p>Read-only. No cloning. No repository code is ever run.</p>
       </form>
       {error ? <p className="form-message form-error" role="alert">{error}</p> : null}
-      {result ? (
-        <section className="analysis-preview" aria-live="polite">
-          <span>Recommendation ready</span>
-          <strong>{result.classification.summary}</strong>
-        </section>
-      ) : null}
+      {result ? <AnalysisReport result={result} /> : null}
     </div>
   );
 }
