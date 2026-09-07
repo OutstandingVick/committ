@@ -1,0 +1,19 @@
+[toolchain]
+anchor_version = "0.32.1"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.localnet]
+committ_tip_jar = "BWWJ1RDYeu8UfC4D4258zWpK8EDA1fBeoPap8zu6tFnR"
+
+[programs.devnet]
+committ_tip_jar = "BWWJ1RDYeu8UfC4D4258zWpK8EDA1fBeoPap8zu6tFnR"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "cargo test --workspace"
