@@ -33,10 +33,7 @@ pub mod committ_tip_jar {
             amount,
         )?;
         let campaign = &mut ctx.accounts.campaign;
-        campaign.total_tipped = campaign
-            .total_tipped
-            .checked_add(amount)
-            .ok_or(TipJarError::ArithmeticOverflow)?;
+        campaign.total_tipped = checked_total(campaign.total_tipped, amount)?;
         emit!(TipReceived {
             campaign: campaign.key(),
             tipper: ctx.accounts.tipper.key(),
@@ -58,10 +55,7 @@ pub mod committ_tip_jar {
         ctx.accounts.campaign.sub_lamports(amount)?;
         ctx.accounts.authority.add_lamports(amount)?;
         let campaign = &mut ctx.accounts.campaign;
-        campaign.total_withdrawn = campaign
-            .total_withdrawn
-            .checked_add(amount)
-            .ok_or(TipJarError::ArithmeticOverflow)?;
+        campaign.total_withdrawn = checked_total(campaign.total_withdrawn, amount)?;
         emit!(Withdrawal {
             campaign: campaign.key(),
             authority: ctx.accounts.authority.key(),
@@ -158,4 +152,30 @@ pub enum TipJarError {
     Unauthorized,
     #[msg("Campaign accounting overflowed.")]
     ArithmeticOverflow,
+}
+
+fn checked_total(current: u64, amount: u64) -> Result<u64> {
+    current
+        .checked_add(amount)
+        .ok_or_else(|| error!(TipJarError::ArithmeticOverflow))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn campaign_space_includes_anchor_discriminator() {
+        assert_eq!(Campaign::SPACE, 89);
+    }
+
+    #[test]
+    fn accounting_accepts_normal_tips() {
+        assert_eq!(checked_total(500, 250).unwrap(), 750);
+    }
+
+    #[test]
+    fn accounting_rejects_overflow() {
+        assert!(checked_total(u64::MAX, 1).is_err());
+    }
 }
