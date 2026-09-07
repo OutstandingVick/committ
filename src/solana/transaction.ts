@@ -8,17 +8,19 @@ import {
   setTransactionMessageFeePayer,
   setTransactionMessageLifetimeUsingBlockhash,
   type Address,
+  type Base64EncodedWireTransaction,
   type Instruction,
   type Transaction,
+  type TransactionMessageBytesBase64,
 } from '@solana/kit';
 import type { DevnetRpc } from './rpc';
 
 export interface UnsignedTransaction {
   blockhash: string;
   lastValidBlockHeight: bigint;
-  messageBase64: string;
+  messageBase64: TransactionMessageBytesBase64;
   transaction: Transaction;
-  wireBase64: string;
+  wireBase64: Base64EncodedWireTransaction;
 }
 
 export async function buildUnsignedTransaction(input: {
@@ -38,7 +40,7 @@ export async function buildUnsignedTransaction(input: {
   return {
     blockhash: lifetime.blockhash,
     lastValidBlockHeight: lifetime.lastValidBlockHeight,
-    messageBase64: getBase64Decoder().decode(transaction.messageBytes),
+    messageBase64: getBase64Decoder().decode(transaction.messageBytes) as TransactionMessageBytesBase64,
     transaction,
     wireBase64: getBase64EncodedWireTransaction(transaction),
   };
