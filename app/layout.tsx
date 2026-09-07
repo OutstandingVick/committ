@@ -15,6 +15,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Committ — Ship the useful part onchain',
   description: 'Paste a GitHub URL and prepare a safe, audited Solana feature for devnet.',
+  openGraph: {
+    title: 'Committ — Ship the useful part onchain',
+    description: 'Turn a small Web2 repository into a safe, audited Solana feature.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Committ — Ship the useful part onchain',
+    description: 'Turn a small Web2 repository into a safe, audited Solana feature.',
+  },
 };
 
 export default function RootLayout({

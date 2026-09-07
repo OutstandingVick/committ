@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::system_program::{self, Transfer};
 
-declare_id!("BWWJ1RDYeu8UfC4D4258zWpK8EDA1fBeoPap8zu6tFnR");
+declare_id!("6NkMViXG4f2FGBMRdjEceN3fQM3fUvTbkbEo17oGRJ6y");
 
 #[program]
 pub mod committ_tip_jar {

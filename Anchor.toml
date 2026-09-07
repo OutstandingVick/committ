@@ -6,10 +6,10 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-committ_tip_jar = "BWWJ1RDYeu8UfC4D4258zWpK8EDA1fBeoPap8zu6tFnR"
+committ_tip_jar = "6NkMViXG4f2FGBMRdjEceN3fQM3fUvTbkbEo17oGRJ6y"
 
 [programs.devnet]
-committ_tip_jar = "BWWJ1RDYeu8UfC4D4258zWpK8EDA1fBeoPap8zu6tFnR"
+committ_tip_jar = "6NkMViXG4f2FGBMRdjEceN3fQM3fUvTbkbEo17oGRJ6y"
 
 [provider]
 cluster = "localnet"
