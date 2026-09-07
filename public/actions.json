@@ -1,0 +1,8 @@
+{
+  "rules": [
+    {
+      "pathPattern": "/launch/*",
+      "apiPath": "/api/actions/tip-jar?repo=https%3A%2F%2Fgithub.com%2FOutstandingVick%2Fcommitt"
+    }
+  ]
+}
