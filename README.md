@@ -11,11 +11,20 @@ The first template is a SOL tip jar. The product flow is:
 1. Read a public GitHub repository through the GitHub REST API.
 2. Classify its use case using deterministic evidence.
 3. Ask the developer to confirm the recommendation.
-4. Prepare the audited tip-jar deployment for Solana devnet.
-5. Return plain-language logs and verifiable explorer links.
-6. Hand off token launch details to ClawPump when configured.
+4. Connect a Wallet Standard-compatible Solana wallet.
+5. Build and simulate an audited initialize or tip transaction on devnet.
+6. Show the program, campaign PDA, fee payer, amount, rent, fee, and compute estimate.
+7. Require explicit review before the wallet signs and sends.
+8. Wait for confirmation and return a verifiable Explorer link.
+9. Hand off token launch details to ClawPump when configured.
 
-No mainnet transaction is created or sent in phase one. Committ never accepts private keys; signing belongs in the developer's wallet.
+No mainnet transaction is created or sent in phase one. Committ never accepts private keys; signing belongs in the developer's wallet. The deployed devnet program is [`6NkM…GRJ6y`](https://explorer.solana.com/address/6NkMViXG4f2FGBMRdjEceN3fQM3fUvTbkbEo17oGRJ6y?cluster=devnet).
+
+## Blink transaction path
+
+The action endpoint is `/api/actions/tip-jar`. A prepared plan adds the repository and campaign authority to its URL. `POST` accepts only the connected wallet's public address, derives the repository-specific PDA, validates any existing campaign account, builds an unsigned versioned transaction, and simulates it against devnet. The browser displays that receipt and asks for explicit approval before handing the transaction to the wallet.
+
+The server never broadcasts a transaction. A Wallet Standard wallet signs and sends directly, and `/api/transactions/:signature` reports confirmed or finalized chain evidence.
 
 ## Local development
 
@@ -34,6 +43,8 @@ npm run lint
 npm run test
 npm run build
 ```
+
+`npm test` covers URL and amount validation, deterministic PDAs, IDL discriminators, account decoding, Blink descriptors, unsigned transaction compilation, and the simulation gate.
 
 ## Program workspace
 

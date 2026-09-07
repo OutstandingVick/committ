@@ -5,7 +5,7 @@ import type { TipJarActionRequest } from './actionRequest';
 import { deriveCampaignAddress, hashRepository } from './campaign';
 import { getTipJarProgramAddress } from './config';
 import { getInitializeCampaignInstruction, getTipInstruction } from './instructions';
-import { createDevnetRpc, fetchValidatedAccount, type DevnetRpc } from './rpc';
+import { createDevnetRpc, fetchValidatedAccount, sendDevnetRpcRequest, type DevnetRpc } from './rpc';
 import { simulateAndPriceTransaction } from './simulation';
 import { buildUnsignedTransaction } from './transaction';
 
@@ -64,9 +64,9 @@ export async function prepareTipJarAction(
       })();
 
   if (request.operation === 'initialize') {
-    estimatedRentLamports = await rpc.getMinimumBalanceForRentExemption(BigInt(CAMPAIGN_ACCOUNT_SIZE), {
+    estimatedRentLamports = await sendDevnetRpcRequest(rpc.getMinimumBalanceForRentExemption(BigInt(CAMPAIGN_ACCOUNT_SIZE), {
       commitment: 'confirmed',
-    }).send();
+    }));
   }
 
   const transaction = await buildUnsignedTransaction({ feePayer: request.account, instruction, rpc });

@@ -9,6 +9,12 @@ parse_repo_url
   -> recommend_audited_template
   -> confirm_with_user
   -> prepare_devnet_deployment
+  -> connect_wallet_standard_wallet
+  -> build_unsigned_transaction
+  -> simulate_on_devnet
+  -> human_transaction_review
+  -> wallet_sign_and_send
+  -> confirm_and_link_explorer
   -> prepare_token_launch
   -> report_back
 ```
@@ -21,6 +27,8 @@ The chain is framework-independent. The web route calls it; it does not duplicat
 - **Classifier:** produces a recommendation, never executable code.
 - **Template registry:** the only source of deployable program choices.
 - **Wallet:** owns signing. The server never requests seed phrases or keypairs.
+- **Blink API:** returns only unsigned, short-lived transactions after a successful simulation.
+- **Campaign account:** owner, discriminator, byte length, repository hash, and authority are validated before tips.
 - **Cluster:** devnet by default. Mainnet is intentionally unavailable in phase one.
 - **ClawPump:** optional server-side adapter; every irreversible launch requires separate confirmation.
 
@@ -40,3 +48,7 @@ The tip-jar program creates one campaign PDA per developer and repository. Anyon
 | Devnet confirmation | cluster-dependent |
 
 The UI reports real elapsed time and never claims a deployment succeeded before confirmed chain evidence exists.
+
+## Transaction boundary
+
+The API derives campaign PDAs from `campaign + authority + SHA-256(canonical repository URL)`. Initialize transactions require the connected account to equal the campaign authority. Tip transactions require an explicit authority in the shareable Blink URL and validate the fetched campaign before serialization. Transactions use a fresh confirmed blockhash and carry no server signature.

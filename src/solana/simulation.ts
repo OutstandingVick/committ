@@ -1,4 +1,4 @@
-import type { DevnetRpc } from './rpc';
+import { sendDevnetRpcRequest, type DevnetRpc } from './rpc';
 import type { UnsignedTransaction } from './transaction';
 
 export interface SimulationReceipt {
@@ -13,13 +13,13 @@ export async function simulateAndPriceTransaction(
   transaction: UnsignedTransaction,
 ): Promise<SimulationReceipt> {
   const [simulation, fee] = await Promise.all([
-    rpc.simulateTransaction(transaction.wireBase64, {
+    sendDevnetRpcRequest(rpc.simulateTransaction(transaction.wireBase64, {
       commitment: 'confirmed',
       encoding: 'base64',
       replaceRecentBlockhash: false,
       sigVerify: false,
-    }).send(),
-    rpc.getFeeForMessage(transaction.messageBase64, { commitment: 'confirmed' }).send(),
+    })),
+    sendDevnetRpcRequest(rpc.getFeeForMessage(transaction.messageBase64, { commitment: 'confirmed' })),
   ]);
 
   if (simulation.value.err) {

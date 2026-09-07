@@ -1,5 +1,6 @@
-import { publicError } from '../../../../src/agent/errors';
+import { CommittError, publicError } from '../../../../src/agent/errors';
 import { parseRepoUrl } from '../../../../src/agent/tools/parseRepoUrl';
+import { consumeRateLimit } from '../../../../src/lib/rateLimit';
 import { createTipJarActionDescriptor } from '../../../../src/solana/actionDescriptor';
 import { parseTipJarActionRequest } from '../../../../src/solana/actionRequest';
 import { getTipJarProgramAddress, parseSolanaAddress } from '../../../../src/solana/config';
@@ -13,7 +14,7 @@ export async function GET(request: Request): Promise<Response> {
     const repo = parseRepoUrl(requestUrl.searchParams.get('repo') ?? '');
     const origin = requestUrl.origin;
     const authorityValue = requestUrl.searchParams.get('authority');
-    const authority = authorityValue ? parseSolanaAddress(authorityValue, 'campaign authority') : null;
+    const authority = authorityValue ? parseActionAddress(authorityValue) : null;
     getTipJarProgramAddress();
     return actionJson(createTipJarActionDescriptor({
       authority,
@@ -29,13 +30,36 @@ export async function GET(request: Request): Promise<Response> {
 
 export async function POST(request: Request): Promise<Response> {
   try {
-    const length = Number(request.headers.get('content-length') ?? '0');
-    if (length > 2_048) return actionJson({ message: 'The request body is too large.' }, 413);
-    const action = parseTipJarActionRequest(new URL(request.url), await request.json());
+    const clientKey = request.headers.get('cf-connecting-ip')
+      ?? request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      ?? 'anonymous';
+    if (!consumeRateLimit(`blink:${clientKey}`)) {
+      return actionJson({ message: 'Too many transaction requests. Try again in one minute.' }, 429);
+    }
+    const rawBody = await request.text();
+    if (rawBody.length > 2_048) return actionJson({ message: 'The request body is too large.' }, 413);
+    let body: unknown;
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      throw new CommittError('INVALID_JSON', 'Send a valid JSON request body.');
+    }
+    const action = parseTipJarActionRequest(new URL(request.url), body);
     return actionJson(await prepareTipJarAction(action));
   } catch (error) {
     const safe = publicError(error);
     return actionJson({ message: safe.message, code: safe.code }, safe.status);
+  }
+}
+
+function parseActionAddress(value: string) {
+  try {
+    return parseSolanaAddress(value, 'campaign authority');
+  } catch (cause) {
+    throw new CommittError(
+      'INVALID_AUTHORITY',
+      cause instanceof Error ? cause.message : 'The campaign authority is invalid.',
+    );
   }
 }
 

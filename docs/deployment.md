@@ -21,4 +21,15 @@ Required production configuration:
 6. Wait for confirmed finality and verify the executable account in Solana Explorer.
 7. Set `COMMITT_TIP_JAR_PROGRAM_ID` to the verified devnet address.
 
+Current verified devnet program: `6NkMViXG4f2FGBMRdjEceN3fQM3fUvTbkbEo17oGRJ6y`.
+
+## Blink release gate
+
+1. Run `npm run check` and confirm `npm audit` reports no known vulnerabilities.
+2. Call the initialize action with a funded devnet public address and verify simulation passes; do not sign during smoke testing.
+3. Confirm the response identifies devnet, the deployed program, campaign PDA, fee payer, rent, fee, and compute use.
+4. Test wallet rejection and ensure the UI reports that nothing was sent.
+5. Send only after a human checks the transaction-review box in the interface.
+6. Verify the resulting signature through `/api/transactions/:signature` and Solana Explorer.
+
 No step in the web analysis route has permission to deploy, sign, or launch a token. Mainnet remains out of scope until the audit and a separate release approval.

@@ -22,6 +22,15 @@ Status: internal template review. This is not an independent audit and must not 
 - Show program ID, authority, fee payer, cluster, and estimated fee before signing.
 - Wait for confirmed status before showing explorer proof.
 - Never accept, store, or log a seed phrase or keypair.
+- Reject tips outside 0.001–10 devnet SOL and decimal inputs beyond lamport precision.
+- Validate campaign owner, exact account length, Anchor discriminator, authority, and repository hash.
+- Return an unsigned transaction only after `simulateTransaction` succeeds with signature verification disabled.
+- Require a separate in-product approval after simulation and before invoking the wallet.
+- Rate-limit transaction construction and cap JSON request bodies.
+
+## Signing boundary
+
+Committ receives public addresses only. The API constructs but never signs or broadcasts. The browser decodes the returned wire transaction at the Wallet Standard adapter boundary, enforces the transaction size limit, and asks the selected wallet to sign and send on `solana:devnet`. A returned signature is treated as pending until the confirmation endpoint observes `confirmed` or `finalized` status.
 
 ## Remaining work before mainnet
 

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
+import { publicError } from '../src/agent/errors';
 import { analyzeRepository } from '../src/agent/chain';
 import { classifyProject } from '../src/agent/tools/classifyProject';
 import { parseRepoUrl } from '../src/agent/tools/parseRepoUrl';
@@ -22,6 +23,12 @@ const snapshot: RepoSnapshot = {
   fetchedAt: '2026-09-07T00:00:00.000Z',
   truncated: false,
 };
+
+test('returns a retryable response when the devnet RPC is unavailable', () => {
+  const error = publicError(new Error('HTTP error (429): rate limited'));
+  assert.equal(error.code, 'DEVNET_RPC_UNAVAILABLE');
+  assert.equal(error.status, 503);
+});
 
 test('accepts only canonical public GitHub repository URLs', () => {
   assert.deepEqual(repo, {

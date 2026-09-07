@@ -13,7 +13,7 @@ import {
   type Transaction,
   type TransactionMessageBytesBase64,
 } from '@solana/kit';
-import type { DevnetRpc } from './rpc';
+import { sendDevnetRpcRequest, type DevnetRpc } from './rpc';
 
 export interface UnsignedTransaction {
   blockhash: string;
@@ -28,7 +28,9 @@ export async function buildUnsignedTransaction(input: {
   instruction: Instruction;
   rpc: DevnetRpc;
 }): Promise<UnsignedTransaction> {
-  const { value: lifetime } = await input.rpc.getLatestBlockhash({ commitment: 'confirmed' }).send();
+  const { value: lifetime } = await sendDevnetRpcRequest(
+    input.rpc.getLatestBlockhash({ commitment: 'confirmed' }),
+  );
   const message = pipe(
     createTransactionMessage({ version: 0 }),
     (current) => setTransactionMessageFeePayer(input.feePayer, current),

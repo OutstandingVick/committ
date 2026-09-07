@@ -1,7 +1,7 @@
 'use client';
 
 import { useWalletConnection } from '@solana/react-hooks';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import type { AnalysisResult, ApiErrorBody, DeploymentPlan } from '../src/domain/committ';
 import { BlinkTransaction } from './BlinkTransaction';
 
@@ -13,9 +13,7 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!authority && wallet.wallet?.account.address) setAuthority(wallet.wallet.account.address);
-  }, [authority, wallet.wallet?.account.address]);
+  const displayedAuthority = authority || wallet.wallet?.account.address || '';
 
   async function prepare(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,7 +27,7 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
           analysisId: analysis.analysisId,
           repoUrl: analysis.snapshot.repo.canonicalUrl,
           template: analysis.classification.recommendedTemplate,
-          authority,
+          authority: displayedAuthority,
           confirmed,
         }),
       });
@@ -52,7 +50,7 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
       </div>
       <form onSubmit={prepare}>
         <label htmlFor="authority">Authority wallet <span>filled from your connected wallet</span></label>
-        <input id="authority" value={authority} onChange={(event) => setAuthority(event.target.value)} placeholder="Solana address" />
+        <input id="authority" value={displayedAuthority} onChange={(event) => setAuthority(event.target.value)} placeholder="Solana address" />
         <label className="confirmation-row">
           <input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} />
           <span>I reviewed the SOL tip-jar template and confirm devnet preparation.</span>
