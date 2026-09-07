@@ -1,4 +1,5 @@
 import { RepoAnalyzer } from '../components/RepoAnalyzer';
+import { WalletConnection } from '../components/WalletConnection';
 
 const stages = [
   ['01', 'Read', 'A bounded, read-only look at the repository.'],
@@ -15,7 +16,10 @@ export default function Home() {
           <span>committ</span>
         </a>
         <div className="network-pill"><span /> Solana devnet</div>
-        <a className="header-link" href="https://github.com/OutstandingVick/committ">View source ↗</a>
+        <div className="header-actions">
+          <a className="header-link" href="https://github.com/OutstandingVick/committ">Source ↗</a>
+          <WalletConnection />
+        </div>
       </header>
 
       <section className="hero" id="top">
