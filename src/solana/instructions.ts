@@ -33,7 +33,7 @@ export function getTipInstruction(input: {
   programAddress: Address;
   tipper: Address;
 }): Instruction {
-  if (input.amountLamports <= 0n) throw new Error('The tip amount must be greater than zero.');
+  if (input.amountLamports <= BigInt(0)) throw new Error('The tip amount must be greater than zero.');
   return {
     programAddress: input.programAddress,
     accounts: [
@@ -41,7 +41,7 @@ export function getTipInstruction(input: {
       { address: input.tipper, role: AccountRole.WRITABLE_SIGNER },
       { address: SYSTEM_PROGRAM_ADDRESS, role: AccountRole.READONLY },
     ],
-    data: concatBytes(TIP_DISCRIMINATOR, getU64Encoder().encode(input.amountLamports)),
+    data: concatBytes(TIP_DISCRIMINATOR, new Uint8Array(getU64Encoder().encode(input.amountLamports))),
   };
 }
 
