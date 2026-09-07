@@ -71,6 +71,9 @@ h1 em { color:transparent; font-style:normal; -webkit-text-stroke:2px var(--ink)
 .deployment-plan strong { font-family:var(--font-geist-mono); font-size:.72rem; overflow-wrap:anywhere; }
 .deployment-plan ul { border-top:1px solid var(--line); color:#4f594b; font-size:.72rem; line-height:1.7; list-style:none; margin:4px 0 0; padding:12px 0 0; }
 .deployment-plan a { font-size:.75rem; font-weight:700; text-decoration:underline; text-underline-offset:4px; }
+.deployment-plan .token-plan { background:var(--ink); color:white; display:grid; gap:5px; grid-template-columns:1fr; padding:14px; }
+.token-plan span { color:var(--acid); }
+.token-plan p { color:#aeb3aa; font-size:.68rem; margin:2px 0 0; }
 .proof-row { display:flex; flex-wrap:wrap; font-family:var(--font-geist-mono); font-size:.7rem; gap:28px; margin-top:24px; text-transform:uppercase; }
 .proof-row span::before { content:'✓'; margin-right:7px; }
 .process-section { background:var(--ink); color:white; padding:92px 4.5vw 110px; }

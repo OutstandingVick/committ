@@ -1,6 +1,7 @@
 import type { DeploymentPlan, TemplateId } from '../../domain/committ';
 import { getTemplate } from '../../templates/registry';
 import { CommittError } from '../errors';
+import { prepareClawPumpLaunch } from '../../lib/clawpump';
 import { parseRepoUrl } from './parseRepoUrl';
 
 const SOLANA_ADDRESS = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
@@ -55,5 +56,6 @@ export function prepareDeployment(input: PrepareInput): DeploymentPlan {
       authority ? 'The developer supplied the authority address.' : 'A developer wallet is still required.',
       programId ? 'The deployed template program is configured.' : 'Program deployment is still required.',
     ],
+    tokenLaunch: prepareClawPumpLaunch(repo),
   };
 }

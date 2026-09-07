@@ -66,6 +66,16 @@ export interface DeploymentPlan {
   explorerUrl: string | null;
   blinkUrl: string;
   checks: string[];
+  tokenLaunch: TokenLaunchPlan;
+}
+
+export interface TokenLaunchPlan {
+  provider: 'ClawPump';
+  status: 'requires-separate-confirmation';
+  name: string;
+  ticker: string;
+  package: string;
+  safeguards: string[];
 }
 
 export interface ApiErrorBody {

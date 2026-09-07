@@ -60,6 +60,11 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
           <div><span>Cluster</span><strong>{plan.cluster}</strong></div>
           <div><span>Program</span><strong>{plan.programId ?? 'Awaiting deployment'}</strong></div>
           <ul>{plan.checks.map((check) => <li key={check}>✓ {check}</li>)}</ul>
+          <div className="token-plan">
+            <span>Token launch / locked</span>
+            <strong>{plan.tokenLaunch.name} · ${plan.tokenLaunch.ticker}</strong>
+            <p>ClawPump requires a separate irreversible-action confirmation.</p>
+          </div>
           {plan.explorerUrl ? <a href={plan.explorerUrl} target="_blank" rel="noreferrer">Open Solana Explorer ↗</a> : null}
         </div>
       ) : null}
