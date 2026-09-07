@@ -1,3 +1,5 @@
+import { RepoAnalyzer } from '../components/RepoAnalyzer';
+
 const stages = [
   ['01', 'Read', 'A bounded, read-only look at the repository.'],
   ['02', 'Reason', 'Pick one useful on-chain primitive.'],
@@ -24,15 +26,7 @@ export default function Home() {
           prepares an audited program, and gives you the proof.
         </p>
 
-        <form className="repo-form" aria-label="Analyze a GitHub repository">
-          <label htmlFor="repo-url">Public GitHub repository</label>
-          <div className="repo-input-row">
-            <span className="github-prefix" aria-hidden="true">github.com/</span>
-            <input id="repo-url" name="repoUrl" type="url" placeholder="owner/project" autoComplete="url" />
-            <button type="submit">Analyze repo <span aria-hidden="true">→</span></button>
-          </div>
-          <p>Read-only. No cloning. No repository code is ever run.</p>
-        </form>
+        <RepoAnalyzer />
 
         <div className="proof-row" aria-label="Product safeguards">
           <span>Audited templates only</span>
