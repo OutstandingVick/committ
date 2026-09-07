@@ -1,5 +1,9 @@
 import { publicError } from '../../../../src/agent/errors';
 import { parseRepoUrl } from '../../../../src/agent/tools/parseRepoUrl';
+import { createTipJarActionDescriptor } from '../../../../src/solana/actionDescriptor';
+import { parseTipJarActionRequest } from '../../../../src/solana/actionRequest';
+import { getTipJarProgramAddress, parseSolanaAddress } from '../../../../src/solana/config';
+import { prepareTipJarAction } from '../../../../src/solana/prepareAction';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,45 +12,31 @@ export async function GET(request: Request): Promise<Response> {
     const requestUrl = new URL(request.url);
     const repo = parseRepoUrl(requestUrl.searchParams.get('repo') ?? '');
     const origin = requestUrl.origin;
-    return actionJson({
-      type: 'action',
-      icon: `${origin}/favicon.svg`,
-      title: `Tip ${repo.owner}/${repo.name}`,
-      description: 'Send a voluntary SOL tip through the audited Committ tip-jar program on devnet.',
-      label: 'Tip on devnet',
-      disabled: !process.env.COMMITT_TIP_JAR_PROGRAM_ID,
-      error: process.env.COMMITT_TIP_JAR_PROGRAM_ID
-        ? undefined
-        : { message: 'The devnet template has not been deployed yet.' },
-      links: {
-        actions: [
-          {
-            type: 'transaction',
-            label: 'Tip 0.01 SOL',
-            href: `${origin}/api/actions/tip-jar?repo=${encodeURIComponent(repo.canonicalUrl)}&amount=0.01`,
-          },
-          {
-            type: 'transaction',
-            label: 'Tip custom amount',
-            href: `${origin}/api/actions/tip-jar?repo=${encodeURIComponent(repo.canonicalUrl)}&amount={amount}`,
-            parameters: [{ name: 'amount', label: 'SOL amount', required: true, type: 'number', min: 0.001 }],
-          },
-        ],
-      },
-    });
+    const authorityValue = requestUrl.searchParams.get('authority');
+    const authority = authorityValue ? parseSolanaAddress(authorityValue, 'campaign authority') : null;
+    getTipJarProgramAddress();
+    return actionJson(createTipJarActionDescriptor({
+      authority,
+      origin,
+      programConfigured: true,
+      repo,
+    }));
   } catch (error) {
     const safe = publicError(error);
     return actionJson({ message: safe.message }, safe.status);
   }
 }
 
-export async function POST(): Promise<Response> {
-  return actionJson(
-    {
-      message: 'Transaction assembly is locked until the audited template is deployed and configured on devnet.',
-    },
-    503,
-  );
+export async function POST(request: Request): Promise<Response> {
+  try {
+    const length = Number(request.headers.get('content-length') ?? '0');
+    if (length > 2_048) return actionJson({ message: 'The request body is too large.' }, 413);
+    const action = parseTipJarActionRequest(new URL(request.url), await request.json());
+    return actionJson(await prepareTipJarAction(action));
+  } catch (error) {
+    const safe = publicError(error);
+    return actionJson({ message: safe.message, code: safe.code }, safe.status);
+  }
 }
 
 export async function OPTIONS(): Promise<Response> {
@@ -64,5 +54,6 @@ function actionHeaders(): HeadersInit {
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Encoding, Accept-Encoding',
     'X-Action-Version': '2.4',
     'X-Blockchain-Ids': 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1',
+    'Cache-Control': 'no-store',
   };
 }
