@@ -13,7 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Untitled site',
+  title: 'Committ — Ship the useful part onchain',
+  description: 'Paste a GitHub URL and prepare a safe, audited Solana feature for devnet.',
 };
 
 export default function RootLayout({

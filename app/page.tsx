@@ -1,107 +1,67 @@
-const sidebarWidths = [74, 58, 82, 66, 71, 54];
-const articleWidths = [100, 97, 94, 98, 86];
+const stages = [
+  ['01', 'Read', 'A bounded, read-only look at the repository.'],
+  ['02', 'Reason', 'Pick one useful on-chain primitive.'],
+  ['03', 'Ship', 'Prepare an audited template for devnet.'],
+] as const;
 
 export default function Home() {
   return (
-    <main className="fixed inset-0 overflow-hidden bg-[#fbfaf8] text-zinc-900">
-      <header
-        aria-hidden="true"
-        className="grid h-[76px] grid-cols-[1fr_auto_1fr] items-center border-b border-stone-200 bg-white/95 px-6 sm:px-14"
-      >
-        <div className="flex items-center gap-3">
-          <span className="h-9 w-9 rounded-full bg-stone-100" />
-          <span className="h-3.5 w-28 rounded-full bg-stone-100" />
-        </div>
-        <span className="hidden h-9 w-[min(30vw,420px)] rounded-xl bg-stone-100 sm:block" />
-        <div className="flex items-center justify-end gap-3">
-          <span className="hidden h-9 w-9 rounded-full bg-stone-100 sm:block" />
-          <span className="h-9 w-24 rounded-xl bg-stone-100" />
-        </div>
+    <main>
+      <header className="site-header">
+        <a className="wordmark" href="#top" aria-label="Committ home">
+          <span className="wordmark-mark" aria-hidden="true">C</span>
+          <span>committ</span>
+        </a>
+        <div className="network-pill"><span /> Solana devnet</div>
+        <a className="header-link" href="https://github.com/OutstandingVick/committ">View source ↗</a>
       </header>
 
-      <div
-        aria-hidden="true"
-        className="grid h-[calc(100%-76px)] grid-cols-[180px_minmax(0,1fr)_260px] gap-10 px-6 pb-24 pt-10 opacity-55 max-lg:grid-cols-[150px_minmax(0,1fr)] max-sm:grid-cols-1 sm:px-14"
-      >
-        <aside className="hidden border-r border-stone-200 pr-7 sm:block">
-          <div className="mb-6 h-2.5 w-16 rounded-full bg-stone-200" />
-          <div className="space-y-4">
-            {sidebarWidths.map((width) => (
-              <div key={width} className="flex items-center gap-3">
-                <span className="h-4 w-4 rounded bg-stone-200" />
-                <span
-                  className="h-2.5 rounded-full bg-stone-200"
-                  style={{ width: `${width}%` }}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="mb-6 mt-9 h-2.5 w-24 rounded-full bg-stone-200" />
-          <div className="space-y-4">
-            {sidebarWidths.slice(0, 3).map((width) => (
-              <span
-                key={width}
-                className="block h-2.5 rounded-full bg-stone-200"
-                style={{ width: `${width}%` }}
-              />
-            ))}
-          </div>
-        </aside>
-
-        <article className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-          <div className="space-y-3">
-            <div className="h-2.5 w-28 rounded-full bg-stone-200" />
-            <div className="h-7 w-4/5 rounded-lg bg-stone-200" />
-            <div className="h-7 w-3/5 rounded-lg bg-stone-200" />
-          </div>
-          <div className="min-h-[240px] flex-1 rounded-2xl bg-stone-200" />
-          <div className="flex items-center gap-3">
-            <span className="h-9 w-9 rounded-full bg-stone-200" />
-            <span className="h-2.5 w-28 rounded-full bg-stone-200" />
-          </div>
-          <div className="space-y-2">
-            {articleWidths.map((width) => (
-              <span
-                key={width}
-                className="block h-2.5 rounded-full bg-stone-200"
-                style={{ width: `${width}%` }}
-              />
-            ))}
-          </div>
-        </article>
-
-        <aside className="space-y-5 max-lg:hidden">
-          {[0, 1].map((card) => (
-            <div
-              key={card}
-              className="space-y-4 rounded-2xl border border-stone-200 bg-white/70 p-6"
-            >
-              <span className="block h-10 w-10 rounded-full bg-stone-200" />
-              <span className="block h-3 w-3/5 rounded-full bg-stone-200" />
-              <span className="block h-2.5 w-full rounded-full bg-stone-200" />
-              <span className="block h-2.5 w-4/5 rounded-full bg-stone-200" />
-              <span className="block h-8 w-24 rounded-lg bg-stone-200" />
-            </div>
-          ))}
-        </aside>
-      </div>
-
-      <section
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className="absolute left-1/2 top-[clamp(96px,13vh,122px)] w-[min(620px,calc(100%-40px))] -translate-x-1/2 rounded-[18px] border border-stone-200 bg-white/95 px-5 py-5 shadow-[0_18px_50px_rgb(24_24_27/9%)] backdrop-blur-sm"
-      >
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.09em] text-stone-500">
-          Building your site
+      <section className="hero" id="top">
+        <div className="eyebrow"><span>Web2 → Solana</span><span>Under 60 seconds</span></div>
+        <h1>Ship the useful part<br /><em>onchain.</em></h1>
+        <p className="hero-copy">
+          Paste a small GitHub project. Committ finds one feature that belongs on Solana,
+          prepares an audited program, and gives you the proof.
         </p>
-        <h1 className="text-xl font-semibold tracking-tight">
-          Your site is taking shape
-        </h1>
-        <p className="mt-1 text-sm text-stone-500">
-          Your first version will appear here automatically when it’s ready.
-        </p>
+
+        <form className="repo-form" aria-label="Analyze a GitHub repository">
+          <label htmlFor="repo-url">Public GitHub repository</label>
+          <div className="repo-input-row">
+            <span className="github-prefix" aria-hidden="true">github.com/</span>
+            <input id="repo-url" name="repoUrl" type="url" placeholder="owner/project" autoComplete="url" />
+            <button type="submit">Analyze repo <span aria-hidden="true">→</span></button>
+          </div>
+          <p>Read-only. No cloning. No repository code is ever run.</p>
+        </form>
+
+        <div className="proof-row" aria-label="Product safeguards">
+          <span>Audited templates only</span>
+          <span>Wallet-owned signing</span>
+          <span>Devnet first</span>
+        </div>
       </section>
+
+      <section className="process-section" aria-labelledby="process-title">
+        <div className="section-kicker">The 60-second path</div>
+        <div className="process-heading">
+          <h2 id="process-title">One link in.<br />Chain evidence out.</h2>
+          <p>No generated Rust. Committ maps repository evidence to a small registry of reviewed programs.</p>
+        </div>
+        <div className="stage-grid">
+          {stages.map(([number, title, description]) => (
+            <article className="stage-card" key={number}>
+              <span className="stage-number">{number}</span>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <footer>
+        <span>Committ / developer onboarding as a product</span>
+        <span>Built for Solana</span>
+      </footer>
     </main>
   );
 }
