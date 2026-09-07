@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import type { AnalysisResult, ApiErrorBody } from '../src/domain/committ';
 import { AnalysisReport } from './AnalysisReport';
+import { DeploymentReview } from './DeploymentReview';
 
 export function RepoAnalyzer() {
   const [repoUrl, setRepoUrl] = useState('');
@@ -59,7 +60,7 @@ export function RepoAnalyzer() {
         <p>Read-only. No cloning. No repository code is ever run.</p>
       </form>
       {error ? <p className="form-message form-error" role="alert">{error}</p> : null}
-      {result ? <AnalysisReport result={result} /> : null}
+      {result ? <><AnalysisReport result={result} /><DeploymentReview analysis={result} /></> : null}
     </div>
   );
 }

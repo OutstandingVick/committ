@@ -54,6 +54,23 @@ h1 em { color:transparent; font-style:normal; -webkit-text-stroke:2px var(--ink)
 .agent-log strong { font-family:var(--font-geist-mono); font-size:.65rem; text-transform:uppercase; }
 .agent-log p { color:#b8bdb4; font-size:.75rem; line-height:1.45; margin:4px 0 0; }
 .agent-log time { color:#747a70; font-family:var(--font-geist-mono); font-size:.6rem; }
+.deployment-review { background:#dce5d5; border:1px solid var(--line); border-top:0; padding:clamp(22px,3vw,34px); }
+.review-copy h3 { font-size:clamp(1.7rem,3vw,2.6rem); letter-spacing:-.055em; margin:5px 0 10px; }
+.review-copy > p { color:#596054; font-size:.85rem; margin:0 0 28px; }
+.deployment-review form { display:grid; gap:10px; }
+.deployment-review form > label:first-child { display:flex; font-size:.72rem; font-weight:650; justify-content:space-between; }
+.deployment-review label span { color:#687063; font-weight:400; }
+.deployment-review form > input { background:rgba(255,255,255,.72); border:1px solid var(--line); border-radius:0; min-height:50px; padding:0 14px; }
+.confirmation-row { align-items:start; display:flex; font-size:.78rem; gap:9px; line-height:1.4; margin:8px 0; }
+.confirmation-row input { margin-top:3px; }
+.deployment-review button { background:var(--ink); border:0; color:white; cursor:pointer; min-height:50px; padding:0 18px; }
+.deployment-review button:disabled { cursor:not-allowed; opacity:.42; }
+.deployment-plan { background:var(--paper); border:1px solid var(--line); display:grid; gap:14px; margin-top:20px; padding:18px; }
+.deployment-plan > div { display:grid; gap:4px; grid-template-columns:90px 1fr; }
+.deployment-plan span { color:var(--muted); font-family:var(--font-geist-mono); font-size:.62rem; text-transform:uppercase; }
+.deployment-plan strong { font-family:var(--font-geist-mono); font-size:.72rem; overflow-wrap:anywhere; }
+.deployment-plan ul { border-top:1px solid var(--line); color:#4f594b; font-size:.72rem; line-height:1.7; list-style:none; margin:4px 0 0; padding:12px 0 0; }
+.deployment-plan a { font-size:.75rem; font-weight:700; text-decoration:underline; text-underline-offset:4px; }
 .proof-row { display:flex; flex-wrap:wrap; font-family:var(--font-geist-mono); font-size:.7rem; gap:28px; margin-top:24px; text-transform:uppercase; }
 .proof-row span::before { content:'✓'; margin-right:7px; }
 .process-section { background:var(--ink); color:white; padding:92px 4.5vw 110px; }
