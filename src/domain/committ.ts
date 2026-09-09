@@ -62,7 +62,7 @@ export interface DeploymentPlan {
   repository: string;
   programId: string | null;
   authority: string | null;
-  status: 'dry-run' | 'ready-for-wallet';
+  status: 'needs-wallet' | 'ready-for-wallet';
   explorerUrl: string | null;
   blinkUrl: string;
   checks: string[];
@@ -71,10 +71,9 @@ export interface DeploymentPlan {
 
 export interface TokenLaunchPlan {
   provider: 'ClawPump';
-  status: 'requires-separate-confirmation';
+  status: 'not-implemented';
   name: string;
   ticker: string;
-  package: string;
   safeguards: string[];
 }
 

@@ -61,14 +61,14 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
 
       {plan ? (
         <div className="deployment-plan" aria-live="polite">
-          <div><span>Status</span><strong>{plan.status === 'dry-run' ? 'Dry run ready' : 'Ready for wallet'}</strong></div>
+          <div><span>Status</span><strong>{plan.status === 'needs-wallet' ? 'Connect a wallet to continue' : 'Ready for wallet'}</strong></div>
           <div><span>Cluster</span><strong>{plan.cluster}</strong></div>
           <div><span>Program</span><strong>{plan.programId ?? 'Awaiting deployment'}</strong></div>
           <ul>{plan.checks.map((check) => <li key={check}>✓ {check}</li>)}</ul>
           <div className="token-plan">
-            <span>Token launch / locked</span>
+            <span>Token launch / not implemented</span>
             <strong>{plan.tokenLaunch.name} · ${plan.tokenLaunch.ticker}</strong>
-            <p>ClawPump requires a separate irreversible-action confirmation.</p>
+            <p>This is a naming draft only. Committ cannot launch a token yet.</p>
           </div>
           {plan.explorerUrl ? <a href={plan.explorerUrl} target="_blank" rel="noreferrer">Open Solana Explorer ↗</a> : null}
           {plan.status === 'ready-for-wallet' ? <BlinkTransaction blinkUrl={plan.blinkUrl} /> : null}

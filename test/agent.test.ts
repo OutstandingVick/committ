@@ -78,13 +78,13 @@ test('requires confirmation and never prepares mainnet', () => {
     analysisId: '12345678', repoUrl: repo.canonicalUrl, template: 'tip-jar', confirmed: true, origin: 'https://committ.test',
   });
   assert.equal(plan.cluster, 'devnet');
-  assert.equal(plan.status, 'dry-run');
+  assert.equal(plan.status, 'needs-wallet');
   assert.match(plan.blinkUrl, /^https:\/\/committ\.test/);
 });
 
-test('keeps ClawPump launch behind a separate confirmation boundary', () => {
+test('reports ClawPump launch as unimplemented', () => {
   const plan = prepareClawPumpLaunch(repo);
-  assert.equal(plan.status, 'requires-separate-confirmation');
+  assert.equal(plan.status, 'not-implemented');
   assert.equal(plan.ticker, 'COMMITT');
   assert.ok(plan.safeguards.some((item) => item.includes('irreversible')));
 });

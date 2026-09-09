@@ -30,7 +30,7 @@ The chain is framework-independent. The web route calls it; it does not duplicat
 - **Blink API:** returns only unsigned, short-lived transactions after a successful simulation.
 - **Campaign account:** owner, discriminator, byte length, repository hash, and authority are validated before tips.
 - **Cluster:** devnet by default. Mainnet is intentionally unavailable in phase one.
-- **ClawPump:** optional server-side adapter; every irreversible launch requires separate confirmation.
+- **ClawPump:** planning-only naming draft. No provider command, authentication, or token execution exists yet.
 
 ## First template
 

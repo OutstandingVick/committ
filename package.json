@@ -11,7 +11,10 @@
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "test": "node --import tsx --test test/*.test.ts",
-    "check": "npm run lint && npm test && npm run build"
+    "check:web": "npm run lint && npm test",
+    "check:program": "NO_DNA=1 cargo test --workspace --locked",
+    "check": "npm run check:web && npm run build",
+    "smoke:blink": "node --env-file-if-exists=.env.local --import tsx scripts/smoke-blink.ts"
   },
   "dependencies": {
     "@solana/client": "^1.7.0",
@@ -25,7 +28,7 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.54.4",
+    "@cloudflare/vite-plugin": "^1.54.6",
     "@cloudflare/workers-types": "^5.20260907.1",
     "@openai/sites-vite-plugin": "^0.1.0 || ^0.2.0",
     "@tailwindcss/postcss": "4.2.1",
@@ -42,7 +45,10 @@
     "typescript": "5.9.3",
     "vinext": "^1.0.0-beta.9",
     "vite": "^8.2.2",
-    "wrangler": "^4.129.0"
+    "wrangler": "^4.130.0"
+  },
+  "overrides": {
+    "sharp": "0.35.4"
   },
   "type": "module"
 }

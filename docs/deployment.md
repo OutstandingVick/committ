@@ -6,10 +6,12 @@ Required production configuration:
 
 - `GITHUB_TOKEN`: read-only GitHub token for reliable public API limits.
 - `COMMITT_GITHUB_API_URL`: defaults to `https://api.github.com`.
-- `COMMITT_SOLANA_CLUSTER`: must remain `devnet` in phase one.
-- `COMMITT_SOLANA_RPC_URL`: a trusted devnet HTTP RPC endpoint.
+- `COMMITT_SOLANA_RPC_URL`: a dedicated, trusted devnet HTTPS RPC endpoint. Shared public endpoints are not reliable enough for the hosted worker.
 - `COMMITT_TIP_JAR_PROGRAM_ID`: set only after the audited build is deployed and verified.
-- `CLAWPUMP_PACKAGE`: pinned official CLI package for a separately confirmed launch.
+
+Copy `.env.example` to `.env.local` for local development. Hosted values belong in the Sites environment and must not be committed.
+
+The Sites project is recorded in `.openai/hosting.json`. After changing hosted environment values, publish a new version so the new environment revision is applied. Never put RPC credentials in the manifest, Git configuration, or committed files.
 
 ## Program release gate
 
@@ -22,6 +24,8 @@ Required production configuration:
 7. Set `COMMITT_TIP_JAR_PROGRAM_ID` to the verified devnet address.
 
 Current verified devnet program: `6NkMViXG4f2FGBMRdjEceN3fQM3fUvTbkbEo17oGRJ6y`.
+
+The web client currently exposes initialize and tip only. Withdrawal exists in the program but has no web transaction path.
 
 ## Blink release gate
 
