@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { AgentLog, AnalysisResult, ProjectClassification, RepoSnapshot } from '../domain/committ';
-import { getTemplate } from '../templates/registry';
+import { prepareClawPumpLaunch } from '../lib/clawpump';
 import { classifyProject } from './tools/classifyProject';
 import { parseRepoUrl } from './tools/parseRepoUrl';
 import { readRepo } from './tools/readRepo';
@@ -12,7 +12,14 @@ interface AnalyzeDependencies {
   clock?: () => number;
 }
 
-/** The single source of truth for repository analysis, independent of the web UI. */
+/**
+ * The single source of truth for repository analysis, independent of the web
+ * UI. There is no template registry and no devnet preparation step here -
+ * the chain reads the repo, classifies it in plain language, and drafts a
+ * ClawPump token identity for it. Launching and trading are handled entirely
+ * by ClawPump's own tools (see ../lib/clawpump.ts), never by code generated
+ * here.
+ */
 export async function analyzeRepository(
   repoUrl: string,
   dependencies: AnalyzeDependencies = {},
@@ -36,12 +43,12 @@ export async function analyzeRepository(
   const classification = (dependencies.classifyProject ?? classifyProject)(snapshot);
   log('classify', `Classified the repository as ${classification.projectKind}.`);
 
-  const template = getTemplate(classification.recommendedTemplate);
-  log('recommend', `Selected ${template.name} from the fixed audited-template registry.`);
+  const tokenLaunch = prepareClawPumpLaunch(repo);
+  log('plan', `Drafted a ClawPump token identity: ${tokenLaunch.name} ($${tokenLaunch.ticker}).`);
   logs.push({
-    step: 'prepare',
+    step: 'report',
     status: 'waiting',
-    message: 'Waiting for the developer to review and confirm the devnet plan.',
+    message: 'Waiting for the developer to review and confirm the launch.',
     elapsedMs: Math.max(0, clock() - startedAt),
   });
 
@@ -49,6 +56,7 @@ export async function analyzeRepository(
     analysisId: (dependencies.id ?? randomUUID)(),
     snapshot,
     classification,
+    tokenLaunch,
     logs,
     requiresConfirmation: true,
   };

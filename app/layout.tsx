@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { getSolanaRpcUrl } from '../src/lib/solanaRpc';
 import { Providers } from './providers';
 import './globals.css';
 
@@ -15,16 +16,16 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Committ — Ship the useful part onchain',
-  description: 'Paste a GitHub URL and prepare a safe, audited Solana feature for devnet.',
+  description: 'Connect GitHub and a wallet. Committ drafts a ClawPump token for your repo and launches it once you confirm.',
   openGraph: {
     title: 'Committ — Ship the useful part onchain',
-    description: 'Turn a small Web2 repository into a safe, audited Solana feature.',
+    description: 'Committ reads your GitHub repos, drafts a ClawPump token identity, and launches it once you confirm.',
     type: 'website',
   },
   twitter: {
     card: 'summary',
     title: 'Committ — Ship the useful part onchain',
-    description: 'Turn a small Web2 repository into a safe, audited Solana feature.',
+    description: 'Committ reads your GitHub repos, drafts a ClawPump token identity, and launches it once you confirm.',
   },
 };
 
@@ -33,12 +34,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Resolved on the server so a real COMMITT_SOLANA_RPC_URL actually reaches
+  // the wallet client, instead of the client bundle silently always hitting
+  // the public (heavily throttled) endpoint.
+  const rpcUrl = getSolanaRpcUrl();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers rpcUrl={rpcUrl}>{children}</Providers>
       </body>
     </html>
   );

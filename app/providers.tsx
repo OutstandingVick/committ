@@ -2,18 +2,22 @@
 
 import { autoDiscover, createClient } from '@solana/client';
 import { SolanaClientProvider } from '@solana/react-hooks';
-import { devnet } from '@solana/kit';
-import type { ReactNode } from 'react';
-import { DEVNET_RPC_URL } from '../src/solana/config';
+import { mainnet } from '@solana/kit';
+import { useMemo, type ReactNode } from 'react';
+import { toWebsocketUrl } from '../src/lib/solanaRpc';
 
-const client = createClient({
-  cluster: 'devnet',
-  commitment: 'confirmed',
-  endpoint: devnet(DEVNET_RPC_URL),
-  walletConnectors: autoDiscover(),
-  websocketEndpoint: devnet('wss://api.devnet.solana.com'),
-});
+export function Providers({ children, rpcUrl }: { children: ReactNode; rpcUrl: string }) {
+  const client = useMemo(
+    () =>
+      createClient({
+        cluster: 'mainnet',
+        commitment: 'confirmed',
+        endpoint: mainnet(rpcUrl),
+        walletConnectors: autoDiscover(),
+        websocketEndpoint: mainnet(toWebsocketUrl(rpcUrl)),
+      }),
+    [rpcUrl],
+  );
 
-export function Providers({ children }: { children: ReactNode }) {
   return <SolanaClientProvider client={client}>{children}</SolanaClientProvider>;
 }

@@ -11,10 +11,10 @@ export function AnalysisReport({ result }: { result: AnalysisResult }) {
       </div>
       <div className="report-heading">
         <div>
-          <p className="report-kicker">Recommended on-chain feature</p>
-          <h2 id="analysis-title">SOL tip jar</h2>
+          <p className="report-kicker">ClawPump token draft</p>
+          <h2 id="analysis-title">{result.tokenLaunch.name} · ${result.tokenLaunch.ticker}</h2>
         </div>
-        <span className="template-badge">Audited template / v0.1</span>
+        <span className="template-badge">Powered by ClawPump</span>
       </div>
       <p className="report-summary">{result.classification.summary}</p>
 

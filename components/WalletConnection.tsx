@@ -2,6 +2,7 @@
 
 import { useWalletConnection } from '@solana/react-hooks';
 import { useState } from 'react';
+import { ConnectedBadge } from './ConnectedBadge';
 
 export function WalletConnection() {
   const wallet = useWalletConnection();
@@ -13,10 +14,10 @@ export function WalletConnection() {
 
   if (wallet.connected && wallet.wallet) {
     return (
-      <div className="wallet-connected">
-        <span><i />{shortAddress(wallet.wallet.account.address)}</span>
-        <button type="button" onClick={() => void wallet.disconnect()}>Disconnect</button>
-      </div>
+      <ConnectedBadge
+        label={shortAddress(wallet.wallet.account.address)}
+        onDisconnect={() => void wallet.disconnect()}
+      />
     );
   }
 

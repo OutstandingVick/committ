@@ -5,7 +5,6 @@ import { publicError } from '../src/agent/errors';
 import { analyzeRepository } from '../src/agent/chain';
 import { classifyProject } from '../src/agent/tools/classifyProject';
 import { parseRepoUrl } from '../src/agent/tools/parseRepoUrl';
-import { prepareDeployment } from '../src/agent/tools/prepareDeployment';
 import { MAX_FILE_BYTES, readRepo } from '../src/agent/tools/readRepo';
 import type { RepoSnapshot } from '../src/domain/committ';
 import { prepareClawPumpLaunch } from '../src/lib/clawpump';
@@ -24,9 +23,9 @@ const snapshot: RepoSnapshot = {
   truncated: false,
 };
 
-test('returns a retryable response when the devnet RPC is unavailable', () => {
+test('returns a retryable response when an upstream service is unavailable', () => {
   const error = publicError(new Error('HTTP error (429): rate limited'));
-  assert.equal(error.code, 'DEVNET_RPC_UNAVAILABLE');
+  assert.equal(error.code, 'UPSTREAM_UNAVAILABLE');
   assert.equal(error.status, 503);
 });
 
@@ -52,14 +51,13 @@ test('reads only allowlisted files and truncates oversized text', async () => {
   assert.equal(result.truncated, true);
 });
 
-test('maps bot evidence to the fixed tip jar template', () => {
+test('classifies project shape from repository evidence', () => {
   const result = classifyProject(snapshot);
   assert.equal(result.projectKind, 'bot');
-  assert.equal(result.recommendedTemplate, 'tip-jar');
-  assert.ok(result.confidence >= 0.7);
+  assert.ok(result.confidence >= 0.6);
 });
 
-test('runs analysis through one framework-independent chain', async () => {
+test('runs analysis through one framework-independent chain and drafts a ClawPump token', async () => {
   const result = await analyzeRepository(repo.canonicalUrl, {
     readRepo: async () => snapshot,
     id: () => 'analysis-1234',
@@ -68,23 +66,13 @@ test('runs analysis through one framework-independent chain', async () => {
   assert.equal(result.analysisId, 'analysis-1234');
   assert.equal(result.logs.at(-1)?.status, 'waiting');
   assert.equal(result.requiresConfirmation, true);
+  assert.equal(result.tokenLaunch.provider, 'ClawPump');
+  assert.ok(result.tokenLaunch.ticker.length > 0);
 });
 
-test('requires confirmation and never prepares mainnet', () => {
-  assert.throws(() => prepareDeployment({
-    analysisId: '12345678', repoUrl: repo.canonicalUrl, template: 'tip-jar', confirmed: false, origin: 'https://committ.test',
-  }), /confirm/i);
-  const plan = prepareDeployment({
-    analysisId: '12345678', repoUrl: repo.canonicalUrl, template: 'tip-jar', confirmed: true, origin: 'https://committ.test',
-  });
-  assert.equal(plan.cluster, 'devnet');
-  assert.equal(plan.status, 'needs-wallet');
-  assert.match(plan.blinkUrl, /^https:\/\/committ\.test/);
-});
-
-test('reports ClawPump launch as unimplemented', () => {
+test('drafts a ClawPump launch plan directly from the repository, with no bridge configured', () => {
   const plan = prepareClawPumpLaunch(repo);
-  assert.equal(plan.status, 'not-implemented');
+  assert.equal(plan.status, 'unavailable');
   assert.equal(plan.ticker, 'COMMITT');
   assert.ok(plan.safeguards.some((item) => item.includes('irreversible')));
 });

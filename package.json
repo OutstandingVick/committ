@@ -12,9 +12,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "test": "node --import tsx --test test/*.test.ts",
     "check:web": "npm run lint && npm test",
-    "check:program": "NO_DNA=1 cargo test --workspace --locked",
-    "check": "npm run check:web && npm run build",
-    "smoke:blink": "node --env-file-if-exists=.env.local --import tsx scripts/smoke-blink.ts"
+    "check": "npm run check:web && npm run build"
   },
   "dependencies": {
     "@solana/client": "^1.7.0",

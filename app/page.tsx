@@ -1,10 +1,10 @@
-import { RepoAnalyzer } from '../components/RepoAnalyzer';
+import Image from 'next/image';
 import { WalletConnection } from '../components/WalletConnection';
 
 const stages = [
-  ['01', 'Read', 'A bounded, read-only look at the repository.'],
-  ['02', 'Reason', 'Pick one useful on-chain primitive.'],
-  ['03', 'Ship', 'Prepare an audited template for devnet.'],
+  ['01', 'Read', 'The agent reads every public repo you own the moment GitHub connects.'],
+  ['02', 'Reason', 'It picks the repo that is ready to go onchain, on its own.'],
+  ['03', 'Ship', 'It drafts a ClawPump token identity and, when you fund it, launches the token.'],
 ] as const;
 
 export default function Home() {
@@ -12,38 +12,40 @@ export default function Home() {
     <main>
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="Committ home">
-          <span className="wordmark-mark" aria-hidden="true">C</span>
+          <Image className="wordmark-mark" src="/commit.png" alt="" aria-hidden="true" width={31} height={31} />
           <span>committ</span>
         </a>
-        <div className="network-pill"><span /> Solana devnet</div>
+        <div className="network-pill"><span /> Solana mainnet</div>
         <div className="header-actions">
+          <a className="header-link" href="/launch">Agent mode →</a>
           <a className="header-link" href="https://github.com/OutstandingVick/committ">Source ↗</a>
           <WalletConnection />
         </div>
       </header>
 
       <section className="hero" id="top">
-        <div className="eyebrow"><span>Web2 → Solana</span><span>Under 60 seconds</span></div>
-        <h1>Ship the useful part<br /><em>onchain.</em></h1>
+        <div className="eyebrow"><span>Web2 → Solana</span><span>Developer onboarding, run by an agent</span></div>
+        <h1>An agent that ships<br /><em>your repo onchain.</em></h1>
         <p className="hero-copy">
-          Paste a small GitHub project. Committ finds one feature that belongs on Solana,
-          prepares an audited program, and gives you the proof.
+          Committ is an agent for Solana developer onboarding. Connect your GitHub account and a
+          wallet, and it reads every public repo you own, works out which one is ready to go onchain,
+          and drafts and launches a ClawPump token for it, all on its own.
         </p>
 
-        <RepoAnalyzer />
+        <a className="cta-button" href="/launch">Open agent mode →</a>
 
         <div className="proof-row" aria-label="Product safeguards">
-          <span>Audited templates only</span>
+          <span>ClawPump-powered launches</span>
           <span>Wallet-owned signing</span>
-          <span>Devnet first</span>
+          <span>You confirm every spend</span>
         </div>
       </section>
 
       <section className="process-section" aria-labelledby="process-title">
-        <div className="section-kicker">The 60-second path</div>
+        <div className="section-kicker">How the agent works</div>
         <div className="process-heading">
-          <h2 id="process-title">One link in.<br />Chain evidence out.</h2>
-          <p>No generated Rust. Committ maps repository evidence to a small registry of reviewed programs.</p>
+          <h2 id="process-title">Connect once.<br />Chain evidence out.</h2>
+          <p>No custom programs, ever. Committ hands every launch and trade to ClawPump’s own audited tools, and does it for every repo you own, not just one you type in.</p>
         </div>
         <div className="stage-grid">
           {stages.map(([number, title, description]) => (

@@ -12,18 +12,12 @@ const KIND_SIGNALS: Record<ProjectClassification['projectKind'], RegExp[]> = {
   unknown: [],
 };
 
-const TIP_SIGNALS = [
-  /creator/i,
-  /open.source/i,
-  /community/i,
-  /donat/i,
-  /support/i,
-  /content/i,
-  /discord/i,
-  /telegram/i,
-];
-
-/** Classify bounded text as data. It cannot select code outside the audited registry. */
+/**
+ * Classify bounded text as data, purely to describe the repository in plain
+ * language. This never selects or generates code - it only informs the
+ * summary shown to the developer before a ClawPump token identity is
+ * drafted for the repo.
+ */
 export function classifyProject(snapshot: RepoSnapshot): ProjectClassification {
   const corpus = [
     snapshot.description ?? '',
@@ -46,7 +40,6 @@ export function classifyProject(snapshot: RepoSnapshot): ProjectClassification {
       number,
     ];
   const resolvedKind = projectKind[1] > 0 ? projectKind[0] : 'unknown';
-  const tipMatches = TIP_SIGNALS.filter((pattern) => pattern.test(corpus)).length;
 
   const evidence: ClassificationEvidence[] = [
     {
@@ -55,13 +48,13 @@ export function classifyProject(snapshot: RepoSnapshot): ProjectClassification {
       weight: Math.min(projectKind[1] / 4, 1),
     },
     {
-      label: 'Low-risk utility',
-      detail: 'A tip jar adds an optional on-chain action without moving existing application state.',
+      label: 'Read-only analysis',
+      detail: 'Repository text is only ever read as data; it never becomes code that runs.',
       weight: 1,
     },
     {
-      label: 'Audited boundary',
-      detail: 'The recommendation maps to a fixed template; repository text cannot become Rust code.',
+      label: 'ClawPump boundary',
+      detail: 'Launching and trading always go through ClawPump’s own audited tools, never a generated program.',
       weight: 1,
     },
   ];
@@ -71,10 +64,9 @@ export function classifyProject(snapshot: RepoSnapshot): ProjectClassification {
     ? 'a project with an unfamiliar shape'
     : `${article(resolvedKind)} ${resolvedKind.replace('-', ' ')}`;
   return {
-    summary: `${titleCase(readableName)} appears to be ${shape}. Committ recommends an optional SOL tip jar as the smallest safe on-chain addition.`,
+    summary: `${titleCase(readableName)} appears to be ${shape}. Committ can draft a ClawPump token identity for it and hand off launch and trading to ClawPump.`,
     projectKind: resolvedKind,
-    recommendedTemplate: 'tip-jar',
-    confidence: Math.min(0.62 + projectKind[1] * 0.06 + tipMatches * 0.025, 0.94),
+    confidence: Math.min(0.62 + projectKind[1] * 0.06, 0.94),
     evidence,
   };
 }

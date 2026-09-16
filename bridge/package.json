@@ -1,0 +1,25 @@
+{
+  "name": "committ-bridge",
+  "version": "0.1.0",
+  "description": "Small always-on HTTP bridge that lets the Committ web app (Cloudflare Workers) call ClawPump's MCP tools. Cloudflare Workers cannot run a persistent MCP stdio subprocess, so this tiny Node service hosts the ClawPump MCP client and exposes a minimal, authenticated HTTP API in front of exactly the tools Committ needs.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsc -p tsconfig.json --watch & node --watch dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.7.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.9",
+    "typescript": "^5.5.4"
+  }
+}

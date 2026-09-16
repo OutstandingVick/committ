@@ -1,64 +1,48 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
-import type { AnalysisResult, ApiErrorBody } from '../src/domain/committ';
+import { useEffect, useState } from 'react';
+import type { AnalysisResult } from '../src/domain/committ';
+import { postJson } from '../src/lib/apiClient';
 import { AnalysisReport } from './AnalysisReport';
 import { DeploymentReview } from './DeploymentReview';
 
-export function RepoAnalyzer() {
-  const [repoUrl, setRepoUrl] = useState('');
+/**
+ * Runs the agent's read → classify → recommend chain for one repository the
+ * user already picked in /launch's table. There is no manual URL entry here
+ * any more - the repo is always chosen by clicking Launch, never pasted.
+ *
+ * The parent always renders this with `key={repoUrl}` (see LaunchDashboard),
+ * so a new repo selection remounts a fresh instance rather than reusing this
+ * one - the initial state below is already correct for the very first
+ * render, and the effect only needs to kick off the fetch.
+ */
+export function RepoAnalyzer({ repoUrl }: { repoUrl: string }) {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setLoading(true);
-    setError('');
-    setResult(null);
+  useEffect(() => {
+    let cancelled = false;
 
-    try {
-      const normalized = repoUrl.startsWith('http') ? repoUrl : `https://github.com/${repoUrl}`;
-      const response = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ repoUrl: normalized }),
+    postJson<AnalysisResult>('/api/analyze', { repoUrl }, 'Analysis failed.')
+      .then((body) => {
+        if (!cancelled) setResult(body);
+      })
+      .catch((cause) => {
+        if (!cancelled) setError(cause instanceof Error ? cause.message : 'Committ could not analyze this repository.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
       });
-      const body = await response.json() as AnalysisResult | ApiErrorBody;
-      if (!response.ok || 'error' in body) {
-        throw new Error('error' in body ? body.error.message : 'Analysis failed.');
-      }
-      setResult(body);
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Committ could not analyze this repository.');
-    } finally {
-      setLoading(false);
-    }
-  }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [repoUrl]);
 
   return (
     <div className="analyzer-shell">
-      <form className="repo-form" aria-label="Analyze a GitHub repository" onSubmit={submit}>
-        <label htmlFor="repo-url">Public GitHub repository</label>
-        <div className="repo-input-row">
-          <span className="github-prefix" aria-hidden="true">github.com/</span>
-          <input
-            id="repo-url"
-            name="repoUrl"
-            type="text"
-            placeholder="owner/project"
-            autoComplete="url"
-            value={repoUrl}
-            onChange={(event) => setRepoUrl(event.target.value)}
-            required
-            disabled={loading}
-          />
-          <button type="submit" disabled={loading}>
-            {loading ? 'Reading safely…' : 'Analyze repo'} <span aria-hidden="true">→</span>
-          </button>
-        </div>
-        <p>Read-only. No cloning. No repository code is ever run.</p>
-      </form>
+      {loading ? <p className="form-message">Reading {repoUrl}, read-only, nothing is cloned or run…</p> : null}
       {error ? <p className="form-message form-error" role="alert">{error}</p> : null}
       {result ? <><AnalysisReport result={result} /><DeploymentReview analysis={result} /></> : null}
     </div>

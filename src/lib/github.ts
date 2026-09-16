@@ -63,14 +63,24 @@ export class GitHubClient {
     if (response.status === 404) {
       throw new CommittError('GITHUB_NOT_FOUND', 'That public GitHub repository was not found.', 404);
     }
-    if (response.status === 403 || response.status === 429) {
-      throw new CommittError('GITHUB_RATE_LIMITED', 'GitHub is busy. Please retry in a minute.', 429);
-    }
+    const mapped = githubAuthErrorForStatus(response.status);
+    if (mapped) throw mapped;
     if (!response.ok) {
       throw new CommittError('GITHUB_UNAVAILABLE', 'GitHub could not be read right now.', 502);
     }
     return response.json() as Promise<T>;
   }
+}
+
+/**
+ * The GitHub error responses that mean the same thing regardless of which
+ * endpoint or token produced them - shared between this file's single-repo
+ * reader and src/lib/githubOAuth.ts's authenticated-user calls.
+ */
+export function githubAuthErrorForStatus(status: number): CommittError | null {
+  if (status === 401) return new CommittError('GITHUB_SESSION_EXPIRED', 'Reconnect your GitHub account.', 401);
+  if (status === 403 || status === 429) return new CommittError('GITHUB_RATE_LIMITED', 'GitHub is busy. Please retry in a minute.', 429);
+  return null;
 }
 
 function decodeBase64(value: string): string {
