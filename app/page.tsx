@@ -12,8 +12,7 @@ export default function Home() {
     <main>
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="Committ home">
-          <span className="wordmark-mark" aria-hidden="true">C</span>
-          <span>committ</span>
+          <img src="/committ-logo.svg" alt="" width="151" height="37" />
         </a>
         <div className="network-pill"><span /> Solana devnet</div>
         <div className="header-actions">
@@ -87,7 +86,10 @@ export default function Home() {
       </section>
 
       <footer>
-        <span>Committ / developer onboarding as a product</span>
+        <div className="footer-brand">
+          <a href="#top" aria-label="Committ home"><img src="/committ-logo.svg" alt="" width="151" height="37" /></a>
+          <span>Committ / developer onboarding as a product</span>
+        </div>
         <span>Built for Solana</span>
       </footer>
       </div>

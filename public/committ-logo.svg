@@ -1,0 +1,12 @@
+<svg width="2765" height="680" viewBox="10 20 2765 680" xmlns="http://www.w3.org/2000/svg" style="background: transparent;"><defs>
+    <style>
+      .wordmark { font-family: 'Poppins', sans-serif; font-weight: 700; }
+    </style>
+  </defs>
+  <g transform="translate(40,40)" fill="#52DEE5">
+    <path d="M 300 0 A 310 310 0 0 0 300 620 Z"/>
+    <path d="M 320 0 L 620 0 L 620 300 A 300 300 0 0 1 320 0 Z"/>
+    <path d="M 320 320 L 620 320 L 620 620 L 320 620 Z"/>
+  </g>
+  <text x="760" y="470" class="wordmark" font-size="430" fill="#52DEE5">Committ</text>
+</svg>
