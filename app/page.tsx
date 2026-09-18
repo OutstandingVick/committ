@@ -43,10 +43,12 @@ export default function Home() {
 
       <div className="landing-continuation">
       <section className="process-section" aria-labelledby="process-title">
-        <div className="section-kicker">The 60-second path</div>
+        <div className="section-kicker">How Committ Works</div>
         <div className="process-heading">
-          <h2 id="process-title">One link in.<br />Chain evidence out.</h2>
-          <p>No generated Rust. Committ maps repository evidence to a small registry of reviewed programs.</p>
+          <div>
+            <span className="process-overline">The 60-second path</span>
+            <h2 id="process-title">One link in.<br />Chain evidence out.</h2>
+          </div>
         </div>
         <div className="stage-grid">
           {stages.map(([number, title, description]) => (
