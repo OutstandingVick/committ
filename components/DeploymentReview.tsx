@@ -1,7 +1,7 @@
 'use client';
 
 import { useWalletConnection } from '@solana/react-hooks';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import type { AnalysisResult, ApiErrorBody, DeploymentPlan } from '../src/domain/committ';
 import { BlinkTransaction } from './BlinkTransaction';
 
@@ -9,16 +9,13 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
   const wallet = useWalletConnection();
   const [authority, setAuthority] = useState('');
   const [confirmed, setConfirmed] = useState(false);
-  const [plan, setPlan] = useState<DeploymentPlan | null>(null);
+  const [preparedPlan, setPlan] = useState<DeploymentPlan | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const connectedAuthority = wallet.connected ? wallet.wallet?.account.address : undefined;
   const displayedAuthority = connectedAuthority || authority;
-
-  useEffect(() => {
-    setPlan(null);
-  }, [connectedAuthority]);
+  const plan = preparedPlan?.authority === (displayedAuthority || null) ? preparedPlan : null;
 
   async function prepare(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

@@ -24,6 +24,7 @@ npm run dev
 ```
 
 Open the local URL printed by Vinext. A GitHub token is optional for public repositories, but a dedicated devnet RPC endpoint is strongly recommended because public endpoints are heavily rate-limited.
+The deployed devnet tip-jar program ID is built into the app; `.env.local` is not required for the plan to recognize it. Set `COMMITT_TIP_JAR_PROGRAM_ID` only to override that ID after a different verified deployment.
 
 ### Validate your changes
 
