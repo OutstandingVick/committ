@@ -30,6 +30,8 @@ export default function Home() {
           prepares an audited program, and gives you the proof.
         </p>
 
+        <div className="hero-orbit" aria-hidden="true" />
+
         <RepoAnalyzer />
 
         <div className="proof-row" aria-label="Product safeguards">
