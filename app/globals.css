@@ -143,6 +143,11 @@ button,input { font:inherit; }
 .value-kicker { color:#52dee5; display:block; font-family:var(--font-geist-mono); font-size:.76rem; letter-spacing:.12em; margin-bottom:44px; text-transform:uppercase; }
 .value-intro h2 { font-size:clamp(3.7rem,7.1vw,8rem); font-weight:620; letter-spacing:-.075em; line-height:.95; margin:0; max-width:900px; text-wrap:balance; }
 .value-intro p { color:#b8c7c9; font-size:clamp(1.15rem,1.5vw,1.5rem); line-height:1.5; margin:0 0 8px; max-width:450px; }
+.value-points { border-bottom:1px solid rgba(164,210,212,.18); border-top:1px solid rgba(164,210,212,.18); display:grid; grid-template-columns:repeat(3,1fr); list-style:none; margin:clamp(68px,9vw,130px) auto 0; max-width:1440px; padding:0; }
+.value-points li { align-items:center; border-right:1px solid rgba(164,210,212,.18); display:flex; font-size:clamp(1rem,1.35vw,1.25rem); gap:15px; min-height:112px; padding:22px clamp(18px,2.6vw,40px); }
+.value-points li:first-child { padding-left:0; }
+.value-points li:last-child { border-right:0; }
+.value-points li::before { background:#52dee5; border-radius:50%; box-shadow:0 0 18px rgba(82,222,229,.55); content:''; flex:none; height:7px; width:7px; }
 footer { display:flex; font-family:var(--font-geist-mono); font-size:.65rem; justify-content:space-between; letter-spacing:.05em; padding:26px 4.5vw; text-transform:uppercase; }
 @media (max-width:720px) {
   .site-header { gap:12px; grid-template-columns:1fr auto; min-height:78px; }
