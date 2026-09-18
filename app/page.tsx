@@ -69,6 +69,11 @@ export default function Home() {
           </div>
           <p>Committ maps repository evidence to a small registry of reviewed programs.</p>
         </div>
+        <ul className="value-points">
+          <li>Audited templates only</li>
+          <li>Wallet-owned signing</li>
+          <li>Devnet first</li>
+        </ul>
       </section>
 
       <section className="final-cta" aria-labelledby="final-cta-title">
