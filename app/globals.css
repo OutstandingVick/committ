@@ -126,11 +126,11 @@ button,input { font:inherit; }
 .proof-row span { background:rgba(15,25,27,.55); border:1px solid rgba(157,216,219,.17); border-radius:999px; padding:9px 12px; }
 .proof-row span::before { color:#52dee5; content:'✓'; margin-right:7px; }
 .landing-continuation { background-color:#090d0e; background-image:linear-gradient(rgba(164,210,212,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(164,210,212,.045) 1px,transparent 1px),radial-gradient(circle at 18% 27%,rgba(255,255,255,.48) 0 1px,transparent 1.5px),radial-gradient(circle at 71% 62%,rgba(255,255,255,.36) 0 1px,transparent 1.5px); background-size:114px 114px,114px 114px,311px 337px,397px 283px; color:#f7fbfb; }
-.process-section { background:transparent; color:inherit; padding:92px 4.5vw 110px; }
-.section-kicker { color:var(--acid); font-family:var(--font-geist-mono); font-size:.7rem; letter-spacing:.1em; margin-bottom:34px; text-transform:uppercase; }
-.process-heading { align-items:end; display:grid; gap:40px; grid-template-columns:1.5fr 1fr; }
-.process-heading h2 { font-size:clamp(2.8rem,6vw,6.5rem); letter-spacing:-.07em; line-height:.92; margin:0; }
-.process-heading p { color:#b6bbb2; line-height:1.6; margin:0 0 8px; max-width:470px; }
+.process-section { background:transparent; border-top:1px solid rgba(164,210,212,.13); color:inherit; padding:clamp(88px,10vw,150px) clamp(22px,5vw,96px) clamp(96px,10vw,150px); }
+.section-kicker { color:#52dee5; font-family:var(--font-geist-mono); font-size:.76rem; letter-spacing:.12em; margin:0 auto 44px; max-width:1440px; text-transform:uppercase; }
+.process-heading { margin:0 auto; max-width:1440px; }
+.process-overline { color:#b0c2c4; display:block; font-family:var(--font-geist-mono); font-size:.78rem; letter-spacing:.1em; margin-bottom:22px; text-transform:uppercase; }
+.process-heading h2 { font-size:clamp(3.4rem,6.3vw,7rem); font-weight:620; letter-spacing:-.075em; line-height:.98; margin:0; max-width:1050px; text-wrap:balance; }
 .stage-grid { border-top:1px solid #383c36; display:grid; grid-template-columns:repeat(3,1fr); margin-top:72px; }
 .stage-card { border-right:1px solid #383c36; min-height:250px; padding:26px 30px 22px 0; }
 .stage-card + .stage-card { padding-left:30px; }
