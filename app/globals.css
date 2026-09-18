@@ -33,7 +33,7 @@ button,input { font:inherit; }
 .eyebrow span + span::before { color:#52dee5; content:'✦'; margin-right:10px; }
 .hero h1 { font-size:clamp(4rem,7.1vw,7.4rem); font-weight:650; letter-spacing:-.075em; line-height:.98; margin:31px 0 29px; max-width:1100px; text-wrap:balance; }
 .hero h1 em { color:#f7fbfb; font-style:normal; }
-.hero-copy { color:#aebcbe; font-size:clamp(1.05rem,1.5vw,1.36rem); line-height:1.55; margin:0 auto 27px; max-width:740px; text-wrap:balance; }
+.hero-copy { color:#aebcbe; font-size:clamp(1.05rem,1.5vw,1.36rem); line-height:1.55; margin:0 auto 27px; max-width:740px; text-wrap:balance; z-index:2; }
 .hero-orbit { height:clamp(90px,10vw,150px); pointer-events:none; width:100%; z-index:1; }
 .hero-orbit::before { background:radial-gradient(ellipse 56% 72% at 50% 0%,rgba(82,222,229,.48) 0%,rgba(82,222,229,.23) 30%,rgba(82,222,229,.07) 58%,transparent 78%); border-top:2px solid rgba(188,251,253,.78); border-radius:50% 50% 0 0 / 100% 100% 0 0; box-shadow:0 -12px 34px rgba(82,222,229,.4),0 -38px 105px rgba(82,222,229,.3),inset 0 42px 85px rgba(82,222,229,.3); content:''; height:400px; left:50%; position:absolute; top:28px; transform:translateX(-50%); width:150vw; }
 .hero-orbit::after { background:radial-gradient(ellipse at center,rgba(82,222,229,.4),rgba(82,222,229,.14) 43%,transparent 70%); content:''; filter:blur(36px); height:220px; left:50%; opacity:.85; position:absolute; top:-65px; transform:translateX(-50%); width:115vw; }
@@ -153,7 +153,9 @@ footer { display:flex; font-family:var(--font-geist-mono); font-size:.65rem; jus
   .repo-input-row input { background:rgba(255,255,255,.065); border:1px solid rgba(195,232,234,.22); border-radius:11px; min-height:54px; padding:0 14px; }
   .repo-input-row input:focus { border-color:#52dee5; outline:2px solid rgba(82,222,229,.15); }
   .repo-input-row button { margin:0; min-height:52px; }
-  .hero::after { bottom:-300px; width:220%; }
+  .hero-orbit { height:90px; }
+  .hero-orbit::before { height:270px; top:20px; width:235vw; }
+  .hero-orbit::after { height:170px; top:-30px; width:190vw; }
   .report-heading { align-items:start; flex-direction:column; }
   .evidence-grid { grid-template-columns:1fr; }
   .evidence-grid article,.evidence-grid article + article { border-bottom:1px solid var(--line); border-right:0; padding:18px 0; }
