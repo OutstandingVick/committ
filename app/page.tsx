@@ -41,6 +41,7 @@ export default function Home() {
         </div>
       </section>
 
+      <div className="landing-continuation">
       <section className="process-section" aria-labelledby="process-title">
         <div className="section-kicker">The 60-second path</div>
         <div className="process-heading">
@@ -58,10 +59,21 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="value-section" aria-labelledby="value-title">
+        <h2 id="value-title">Why Committ</h2>
+        <p>No generated Rust. Committ maps repository evidence to a small registry of reviewed programs.</p>
+      </section>
+
+      <section className="final-cta" aria-labelledby="final-cta-title">
+        <h2 id="final-cta-title">Paste a small GitHub project.</h2>
+        <a href="#repo-url">Analyze repo <span aria-hidden="true">→</span></a>
+      </section>
+
       <footer>
         <span>Committ / developer onboarding as a product</span>
         <span>Built for Solana</span>
       </footer>
+      </div>
     </main>
   );
 }
