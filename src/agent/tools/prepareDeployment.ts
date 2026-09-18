@@ -2,6 +2,7 @@ import type { DeploymentPlan, TemplateId } from '../../domain/committ';
 import { getTemplate } from '../../templates/registry';
 import { CommittError } from '../errors';
 import { prepareClawPumpLaunch } from '../../lib/clawpump';
+import { getTipJarProgramAddress } from '../../solana/config';
 import { parseRepoUrl } from './parseRepoUrl';
 
 const SOLANA_ADDRESS = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
@@ -31,10 +32,7 @@ export function prepareDeployment(input: PrepareInput): DeploymentPlan {
     throw new CommittError('INVALID_AUTHORITY', 'Enter a valid Solana wallet address.');
   }
 
-  const programId = process.env.COMMITT_TIP_JAR_PROGRAM_ID?.trim() || null;
-  if (programId && !SOLANA_ADDRESS.test(programId)) {
-    throw new CommittError('INVALID_PROGRAM_CONFIG', 'The configured tip-jar program address is invalid.', 500);
-  }
+  const programId = getTipJarProgramAddress().toString();
 
   const blink = new URL('/api/actions/tip-jar', input.origin);
   blink.searchParams.set('repo', repo.canonicalUrl);
@@ -47,10 +45,8 @@ export function prepareDeployment(input: PrepareInput): DeploymentPlan {
     repository: repo.canonicalUrl,
     programId,
     authority,
-    status: programId && authority ? 'ready-for-wallet' : 'needs-wallet',
-    explorerUrl: programId
-      ? `https://explorer.solana.com/address/${programId}?cluster=devnet`
-      : null,
+    status: authority ? 'ready-for-wallet' : 'needs-wallet',
+    explorerUrl: `https://explorer.solana.com/address/${programId}?cluster=devnet`,
     blinkUrl: blink.toString(),
     checks: [
       'Target cluster is devnet.',
@@ -58,7 +54,7 @@ export function prepareDeployment(input: PrepareInput): DeploymentPlan {
       'No repository code was generated or executed.',
       'No transaction has been signed or sent.',
       authority ? 'The developer supplied the authority address.' : 'A developer wallet is still required.',
-      programId ? 'The deployed template program is configured.' : 'Program deployment is still required.',
+      'The deployed template program is configured.',
     ],
     tokenLaunch: prepareClawPumpLaunch(repo),
   };
