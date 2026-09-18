@@ -62,8 +62,13 @@ export default function Home() {
       </section>
 
       <section className="value-section" aria-labelledby="value-title">
-        <h2 id="value-title">Why Committ</h2>
-        <p>No generated Rust. Committ maps repository evidence to a small registry of reviewed programs.</p>
+        <div className="value-intro">
+          <div>
+            <span className="value-kicker">Why Committ</span>
+            <h2 id="value-title">No generated Rust.</h2>
+          </div>
+          <p>Committ maps repository evidence to a small registry of reviewed programs.</p>
+        </div>
       </section>
 
       <section className="final-cta" aria-labelledby="final-cta-title">
