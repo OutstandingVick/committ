@@ -35,7 +35,8 @@ button,input { font:inherit; }
 .hero h1 em { color:#f7fbfb; font-style:normal; }
 .hero-copy { color:#aebcbe; font-size:clamp(1.05rem,1.5vw,1.36rem); line-height:1.55; margin:0 auto 27px; max-width:740px; text-wrap:balance; }
 .hero-orbit { height:clamp(90px,10vw,150px); pointer-events:none; width:100%; z-index:1; }
-.hero-orbit::before { background:rgba(82,222,229,.08); border:1px solid rgba(82,222,229,.3); border-radius:50%; content:''; height:360px; left:50%; position:absolute; top:25px; transform:translateX(-50%); width:150vw; }
+.hero-orbit::before { background:radial-gradient(ellipse 56% 72% at 50% 0%,rgba(82,222,229,.48) 0%,rgba(82,222,229,.23) 30%,rgba(82,222,229,.07) 58%,transparent 78%); border-top:2px solid rgba(188,251,253,.78); border-radius:50% 50% 0 0 / 100% 100% 0 0; box-shadow:0 -12px 34px rgba(82,222,229,.4),0 -38px 105px rgba(82,222,229,.3),inset 0 42px 85px rgba(82,222,229,.3); content:''; height:400px; left:50%; position:absolute; top:28px; transform:translateX(-50%); width:150vw; }
+.hero-orbit::after { background:radial-gradient(ellipse at center,rgba(82,222,229,.4),rgba(82,222,229,.14) 43%,transparent 70%); content:''; filter:blur(36px); height:220px; left:50%; opacity:.85; position:absolute; top:-65px; transform:translateX(-50%); width:115vw; }
 .repo-form { background:rgba(19,28,30,.78); border:1px solid rgba(179,223,225,.24); border-radius:22px; box-shadow:0 20px 75px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.045); color:white; max-width:760px; padding:19px; position:relative; text-align:left; z-index:2; }
 .repo-form label { display:block; font-family:var(--font-geist-mono); font-size:.65rem; letter-spacing:.08em; margin:0 0 11px; text-transform:uppercase; }
 .repo-input-row { align-items:stretch; background:rgba(255,255,255,.065); border:1px solid rgba(195,232,234,.22); border-radius:15px; display:flex; min-height:62px; overflow:hidden; }
