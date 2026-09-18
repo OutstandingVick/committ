@@ -62,7 +62,7 @@ export interface DeploymentPlan {
   repository: string;
   programId: string | null;
   authority: string | null;
-  status: 'needs-wallet' | 'ready-for-wallet';
+  status: 'needs-authority' | 'ready-for-wallet';
   explorerUrl: string | null;
   blinkUrl: string;
   checks: string[];

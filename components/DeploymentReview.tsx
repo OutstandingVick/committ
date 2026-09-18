@@ -61,7 +61,7 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
 
       {plan ? (
         <div className="deployment-plan" aria-live="polite">
-          <div><span>Status</span><strong>{plan.status === 'needs-wallet' ? 'Connect a wallet to continue' : 'Ready for wallet'}</strong></div>
+          <div><span>Status</span><strong>{plan.status === 'needs-authority' ? 'Authority wallet required' : 'Ready for devnet transaction'}</strong></div>
           <div><span>Cluster</span><strong>{plan.cluster}</strong></div>
           <div><span>Program</span><strong>{plan.programId ?? 'Awaiting deployment'}</strong></div>
           <ul>{plan.checks.map((check) => <li key={check}>✓ {check}</li>)}</ul>

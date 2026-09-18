@@ -45,7 +45,7 @@ export function prepareDeployment(input: PrepareInput): DeploymentPlan {
     repository: repo.canonicalUrl,
     programId,
     authority,
-    status: authority ? 'ready-for-wallet' : 'needs-wallet',
+    status: authority ? 'ready-for-wallet' : 'needs-authority',
     explorerUrl: `https://explorer.solana.com/address/${programId}?cluster=devnet`,
     blinkUrl: blink.toString(),
     checks: [
