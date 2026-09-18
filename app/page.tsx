@@ -67,8 +67,13 @@ export default function Home() {
       </section>
 
       <section className="final-cta" aria-labelledby="final-cta-title">
-        <h2 id="final-cta-title">Paste a small GitHub project.</h2>
-        <a href="#repo-url">Analyze repo <span aria-hidden="true">→</span></a>
+        <div className="cta-inner">
+          <div>
+            <h2 id="final-cta-title">Paste a small GitHub project.</h2>
+            <p>Read-only. No cloning. No repository code is ever run.</p>
+          </div>
+          <a href="#repo-url">Analyze repo <span aria-hidden="true">→</span></a>
+        </div>
       </section>
 
       <footer>
