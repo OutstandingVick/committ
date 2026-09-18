@@ -148,6 +148,10 @@ button,input { font:inherit; }
 .value-points li:first-child { padding-left:0; }
 .value-points li:last-child { border-right:0; }
 .value-points li::before { background:#52dee5; border-radius:50%; box-shadow:0 0 18px rgba(82,222,229,.55); content:''; flex:none; height:7px; width:7px; }
+.final-cta { border-top:1px solid rgba(164,210,212,.18); padding:clamp(96px,10vw,150px) clamp(22px,5vw,96px); }
+.cta-inner { align-items:end; display:grid; gap:48px; grid-template-columns:minmax(0,1fr) auto; margin:0 auto; max-width:1440px; }
+.cta-inner h2 { font-size:clamp(3.2rem,6.8vw,7.5rem); font-weight:620; letter-spacing:-.075em; line-height:.98; margin:0; max-width:1050px; text-wrap:balance; }
+.cta-inner p { color:#b5c5c7; font-size:1rem; line-height:1.6; margin:28px 0 0; }
 footer { display:flex; font-family:var(--font-geist-mono); font-size:.65rem; justify-content:space-between; letter-spacing:.05em; padding:26px 4.5vw; text-transform:uppercase; }
 @media (max-width:720px) {
   .site-header { gap:12px; grid-template-columns:1fr auto; min-height:78px; }
