@@ -10,6 +10,7 @@ import { MAX_FILE_BYTES, readRepo } from '../src/agent/tools/readRepo';
 import type { RepoSnapshot } from '../src/domain/committ';
 import { prepareClawPumpLaunch } from '../src/lib/clawpump';
 import { consumeRateLimit } from '../src/lib/rateLimit';
+import { DEFAULT_TIP_JAR_PROGRAM_ADDRESS } from '../src/solana/config';
 
 const repo = parseRepoUrl('https://github.com/OutstandingVick/committ.git');
 const snapshot: RepoSnapshot = {
@@ -78,8 +79,31 @@ test('requires confirmation and never prepares mainnet', () => {
     analysisId: '12345678', repoUrl: repo.canonicalUrl, template: 'tip-jar', confirmed: true, origin: 'https://committ.test',
   });
   assert.equal(plan.cluster, 'devnet');
-  assert.equal(plan.status, 'needs-wallet');
+  assert.equal(plan.status, 'needs-authority');
   assert.match(plan.blinkUrl, /^https:\/\/committ\.test/);
+});
+
+test('uses the deployed devnet program when no environment override is set', () => {
+  const previous = process.env.COMMITT_TIP_JAR_PROGRAM_ID;
+  delete process.env.COMMITT_TIP_JAR_PROGRAM_ID;
+  try {
+    const plan = prepareDeployment({
+      analysisId: '12345678',
+      repoUrl: repo.canonicalUrl,
+      template: 'tip-jar',
+      authority: '8CjMso3AbebScPgse9HD2cYQj3gcT7xD8UakSgQQNBiE',
+      confirmed: true,
+      origin: 'https://committ.test',
+    });
+    assert.equal(plan.status, 'ready-for-wallet');
+    assert.equal(plan.programId, DEFAULT_TIP_JAR_PROGRAM_ADDRESS);
+    assert.match(plan.explorerUrl ?? '', /cluster=devnet/);
+    assert.match(plan.blinkUrl, /authority=8CjMso3/);
+    assert.ok(plan.checks.includes('The deployed template program is configured.'));
+  } finally {
+    if (previous === undefined) delete process.env.COMMITT_TIP_JAR_PROGRAM_ID;
+    else process.env.COMMITT_TIP_JAR_PROGRAM_ID = previous;
+  }
 });
 
 test('reports ClawPump launch as unimplemented', () => {
