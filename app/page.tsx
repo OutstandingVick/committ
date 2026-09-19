@@ -86,6 +86,10 @@ export default function Home() {
       </section>
 
       <footer className="site-footer">
+        <div className="footer-atmosphere" aria-hidden="true">
+          <span className="footer-speckle" />
+          <span className="footer-orbit-line" />
+        </div>
         <div className="footer-frame">
           <div className="footer-brand">
             <a href="#top" aria-label="Committ home"><img src="/committ-logo.svg" alt="" width="151" height="37" /></a>
