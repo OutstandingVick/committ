@@ -159,6 +159,7 @@ button,input { font:inherit; }
 .footer-frame { display:grid; gap:clamp(48px,8vw,128px); grid-template-columns:minmax(260px,1.35fr) minmax(180px,.65fr); margin:0 auto; max-width:1440px; position:relative; z-index:2; }
 .footer-brand { align-items:flex-start; display:flex; flex-direction:column; gap:22px; max-width:520px; }
 .footer-brand a { display:inline-flex; flex:none; }
+.site-footer .footer-brand img { width:clamp(178px,16vw,248px); }
 @media (max-width:980px) {
   .value-intro,.cta-inner { align-items:start; grid-template-columns:1fr; }
   .value-intro p { max-width:650px; }
