@@ -209,5 +209,11 @@ button,input { font:inherit; }
   .value-points li,.value-points li:first-child { border-bottom:1px solid rgba(164,210,212,.18); border-right:0; min-height:82px; padding:20px 0; }
   .value-points li:last-child { border-bottom:0; }
   .cta-inner a { width:100%; }
-  footer { flex-direction:column; }
+  .site-footer { min-height:560px; padding-bottom:28px; padding-top:64px; }
+  .footer-frame { gap:44px; grid-template-columns:1fr; }
+  .footer-frame > span { justify-self:start; min-width:190px; }
+  .footer-atmosphere::after { bottom:-72px; height:330px; right:-42%; width:145%; }
+  .footer-atmosphere::before { bottom:-112px; right:-28%; width:135%; }
+  .footer-orbit-line { bottom:-295px; right:-84%; width:190vw; }
+  .footer-speckle { left:46%; top:-76px; width:72vw; }
 }
