@@ -86,11 +86,13 @@ export default function Home() {
       </section>
 
       <footer className="site-footer">
-        <div className="footer-brand">
-          <a href="#top" aria-label="Committ home"><img src="/committ-logo.svg" alt="" width="151" height="37" /></a>
-          <span>Committ / developer onboarding as a product</span>
+        <div className="footer-frame">
+          <div className="footer-brand">
+            <a href="#top" aria-label="Committ home"><img src="/committ-logo.svg" alt="" width="151" height="37" /></a>
+            <span>Committ / developer onboarding as a product</span>
+          </div>
+          <span>Built for Solana</span>
         </div>
-        <span>Built for Solana</span>
       </footer>
       </div>
     </main>
