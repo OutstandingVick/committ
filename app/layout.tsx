@@ -16,6 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Committ — Ship the useful part onchain',
   description: 'Paste a GitHub URL and prepare a safe, audited Solana feature for devnet.',
+  icons: {
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+    shortcut: '/favicon.svg',
+  },
   openGraph: {
     title: 'Committ — Ship the useful part onchain',
     description: 'Turn a small Web2 repository into a safe, audited Solana feature.',
