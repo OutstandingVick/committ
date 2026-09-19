@@ -14,11 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  applicationName: 'Committ',
   title: {
     default: 'Committ',
     template: '%s · Committ',
   },
   description: 'Paste a GitHub URL and prepare a safe, audited Solana feature for devnet.',
+  manifest: '/site.webmanifest',
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
     shortcut: '/favicon.svg',

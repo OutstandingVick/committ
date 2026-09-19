@@ -1,0 +1,17 @@
+{
+  "name": "Committ",
+  "short_name": "Committ",
+  "description": "Paste a GitHub URL and prepare a safe, audited Solana feature for devnet.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d0e",
+  "theme_color": "#52DEE5",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
