@@ -85,7 +85,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer>
+      <footer className="site-footer">
         <div className="footer-brand">
           <a href="#top" aria-label="Committ home"><img src="/committ-logo.svg" alt="" width="151" height="37" /></a>
           <span>Committ / developer onboarding as a product</span>
