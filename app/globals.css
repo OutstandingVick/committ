@@ -161,6 +161,8 @@ button,input { font:inherit; }
 .footer-brand a { border-radius:8px; display:inline-flex; flex:none; margin:-6px; padding:6px; }
 .footer-brand a:focus-visible { outline:2px solid #52dee5; outline-offset:4px; }
 .site-footer .footer-brand img { width:clamp(178px,16vw,248px); }
+.footer-brand img { transition:filter 150ms ease,opacity 150ms ease; }
+.footer-brand a:hover img { filter:drop-shadow(0 0 12px rgba(82,222,229,.28)); opacity:.9; }
 .footer-brand > span { color:#8fa1a3; font-size:.9rem; letter-spacing:0; line-height:1.6; max-width:390px; text-transform:none; }
 .footer-frame > span { border-top:1px solid rgba(164,210,212,.24); color:#52dee5; font-family:var(--font-geist-mono); font-size:.72rem; justify-self:stretch; letter-spacing:.12em; padding-top:18px; text-transform:uppercase; }
 .footer-atmosphere { inset:0; overflow:hidden; pointer-events:none; position:absolute; z-index:0; }
