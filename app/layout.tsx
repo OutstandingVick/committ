@@ -14,7 +14,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Committ — Ship the useful part onchain',
+  title: {
+    default: 'Committ',
+    template: '%s · Committ',
+  },
   description: 'Paste a GitHub URL and prepare a safe, audited Solana feature for devnet.',
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
