@@ -252,4 +252,7 @@ button,input { font:inherit; }
   .review-status { align-items:start; flex-direction:column; gap:5px; }
   .process-heading h2,.value-intro h2,.cta-inner h2 { font-size:clamp(2.55rem,13vw,3.7rem); line-height:1; }
   .cta-inner a { gap:14px; min-height:58px; padding-inline:18px; }
+  .site-footer { min-height:520px; padding-bottom:max(24px,env(safe-area-inset-bottom)); }
+  .footer-frame > span { min-width:0; width:100%; }
+  .footer-speckle { left:34%; width:92vw; }
 }
