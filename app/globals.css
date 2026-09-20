@@ -19,7 +19,7 @@ button,input { font:inherit; }
 .wallet-button,.wallet-connected button { background:linear-gradient(180deg,#b9f7f9 0%,#52dee5 60%,#2ebcc4 100%); border:1px solid rgba(184,250,252,.75); border-radius:18px; box-shadow:inset 0 1px rgba(255,255,255,.45),0 8px 26px rgba(82,222,229,.12); color:#082224; cursor:pointer; font-family:var(--font-geist-mono); font-size:.68rem; font-weight:700; min-height:48px; padding:0 22px; text-transform:uppercase; transition:filter .2s ease,transform .2s ease; }
 .wallet-button:hover,.wallet-connected button:hover { filter:brightness(1.08); transform:translateY(-1px); }
 .wallet-button:disabled { cursor:wait; opacity:.55; }
-.wallet-menu { background:#162021; border:1px solid rgba(82,222,229,.25); border-radius:16px; box-shadow:0 18px 42px rgba(0,0,0,.45); color:white; min-width:240px; padding:7px; position:absolute; right:0; top:55px; z-index:20; }
+.wallet-menu { background:#162021; border:1px solid rgba(82,222,229,.25); border-radius:16px; box-shadow:0 18px 42px rgba(0,0,0,.45); color:white; inset-inline-end:0; max-width:calc(100vw - (2 * var(--page-gutter))); min-width:min(240px,calc(100vw - (2 * var(--page-gutter)))); padding:7px; position:absolute; top:55px; z-index:20; }
 .wallet-menu button { align-items:center; background:transparent; border:0; cursor:pointer; display:flex; justify-content:space-between; padding:12px 10px; text-align:left; width:100%; }
 .wallet-menu button:hover { background:rgba(82,222,229,.11); }
 .wallet-menu small,.wallet-menu p { color:#aabec0; font-size:.65rem; }
@@ -188,7 +188,7 @@ button,input { font:inherit; }
   .network-pill { display:none; }
   .header-link { display:none; }
   .wallet-button,.wallet-connected button { border-radius:14px; font-size:.6rem; min-height:42px; padding:0 13px; }
-  .wallet-menu { position:fixed; right:5vw; top:74px; }
+  .wallet-menu { inset-inline-end:var(--page-gutter); position:fixed; top:74px; }
   .hero { min-height:calc(100svh - 78px); padding:80px 6vw 180px; }
   .hero h1 { font-size:clamp(3.45rem,11.7vw,5.8rem); margin:29px 0 24px; }
   .hero-copy { margin-bottom:35px; }
