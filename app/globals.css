@@ -244,4 +244,7 @@ button,input { font:inherit; }
   .blink-heading { flex-direction:column; gap:4px!important; }
   .operation-tabs { grid-template-columns:1fr!important; }
   .operation-tabs button + button { border-left:1px solid var(--line); border-top:0; }
+  .transaction-review dl div { grid-template-columns:1fr; }
+  .transaction-review dd { text-align:left; }
+  .review-status { align-items:start; flex-direction:column; gap:5px; }
 }
