@@ -185,6 +185,9 @@ button,input { font:inherit; }
 @media (max-width:860px) {
   .report-heading { align-items:start; flex-direction:column; }
   .template-badge { align-self:flex-start; }
+  .evidence-grid { grid-template-columns:1fr; }
+  .evidence-grid article,.evidence-grid article + article { border-bottom:1px solid var(--line); border-right:0; padding:18px 0; }
+  .evidence-grid article:last-child { border-bottom:0; }
 }
 @media (max-width:720px) {
   .site-header { gap:12px; grid-template-columns:1fr auto; min-height:78px; }
