@@ -241,4 +241,7 @@ button,input { font:inherit; }
   .agent-log time { grid-column:2; }
   .deployment-review form > label:first-child { align-items:start; flex-direction:column; gap:4px; }
   .deployment-plan > div { grid-template-columns:1fr; }
+  .blink-heading { flex-direction:column; gap:4px!important; }
+  .operation-tabs { grid-template-columns:1fr!important; }
+  .operation-tabs button + button { border-left:1px solid var(--line); border-top:0; }
 }
