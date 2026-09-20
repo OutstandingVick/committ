@@ -24,8 +24,8 @@ button,input { font:inherit; }
 .wallet-menu button:hover { background:rgba(82,222,229,.11); }
 .wallet-menu small,.wallet-menu p { color:#aabec0; font-size:.65rem; }
 .wallet-menu p { line-height:1.45; margin:8px; }
-.wallet-connected { align-items:center; display:flex; gap:9px; }
-.wallet-connected > span { align-items:center; display:flex; font-family:var(--font-geist-mono); font-size:.65rem; gap:7px; }
+.wallet-connected { align-items:center; display:flex; gap:9px; min-width:0; }
+.wallet-connected > span { align-items:center; display:flex; font-family:var(--font-geist-mono); font-size:.65rem; gap:7px; max-width:150px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .wallet-connected i { background:#52dee5; border-radius:50%; display:block; height:7px; width:7px; }
 .hero { align-items:center; background:#090d0e; color:#f7fbfb; display:flex; flex-direction:column; min-height:calc(100svh - 94px); overflow:hidden; padding:clamp(88px,9vw,142px) 5vw clamp(175px,20vw,270px); position:relative; text-align:center; }
 .hero::before { background-image:linear-gradient(rgba(164,210,212,.065) 1px,transparent 1px),linear-gradient(90deg,rgba(164,210,212,.065) 1px,transparent 1px),radial-gradient(circle at 12% 21%,rgba(255,255,255,.75) 0 1px,transparent 1.5px),radial-gradient(circle at 73% 67%,rgba(255,255,255,.6) 0 1px,transparent 1.5px),radial-gradient(circle at 42% 84%,rgba(255,255,255,.45) 0 1px,transparent 1.5px); background-position:center top,center top,0 0,0 0,0 0; background-size:114px 114px,114px 114px,277px 283px,367px 311px,223px 379px; content:''; inset:0; mask-image:linear-gradient(to bottom,transparent,#000 12%,#000 85%,transparent); opacity:.66; pointer-events:none; position:absolute; }
