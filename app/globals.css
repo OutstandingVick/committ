@@ -189,7 +189,7 @@ button,input { font:inherit; }
   .header-link { display:none; }
   .wallet-button,.wallet-connected button { border-radius:14px; font-size:.6rem; min-height:42px; padding:0 13px; }
   .wallet-menu { inset-inline-end:var(--page-gutter); position:fixed; top:74px; }
-  .hero { min-height:calc(100svh - 78px); padding:80px 6vw 180px; }
+  .hero { min-height:calc(100svh - 78px); padding:clamp(64px,16vw,80px) var(--page-gutter) clamp(140px,34vw,180px); }
   .hero h1 { font-size:clamp(3.45rem,11.7vw,5.8rem); margin:29px 0 24px; }
   .hero-copy { margin-bottom:35px; }
   .github-prefix { display:none; }
