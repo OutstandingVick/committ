@@ -13,7 +13,8 @@ button,input { font:inherit; }
 .network-pill span { background:#52dee5; border-radius:50%; box-shadow:0 0 0 4px rgba(82,222,229,.13),0 0 16px rgba(82,222,229,.55); height:7px; width:7px; }
 .header-link { font-size:.88rem; justify-self:end; text-decoration:none; transition:color .2s ease; }
 .header-link:hover { color:#52dee5; }
-.header-actions { align-items:center; display:flex; gap:clamp(18px,2.3vw,38px); justify-self:end; }
+.header-actions { align-items:center; display:flex; gap:clamp(12px,2.3vw,38px); justify-self:end; min-width:0; }
+.header-actions > * { flex:none; }
 .wallet-picker { position:relative; }
 .wallet-button,.wallet-connected button { background:linear-gradient(180deg,#b9f7f9 0%,#52dee5 60%,#2ebcc4 100%); border:1px solid rgba(184,250,252,.75); border-radius:18px; box-shadow:inset 0 1px rgba(255,255,255,.45),0 8px 26px rgba(82,222,229,.12); color:#082224; cursor:pointer; font-family:var(--font-geist-mono); font-size:.68rem; font-weight:700; min-height:48px; padding:0 22px; text-transform:uppercase; transition:filter .2s ease,transform .2s ease; }
 .wallet-button:hover,.wallet-connected button:hover { filter:brightness(1.08); transform:translateY(-1px); }
