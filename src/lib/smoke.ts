@@ -31,3 +31,13 @@ export function parseSmokeArgs(argv: string[]): SmokeArgs {
     hostedUrl,
   };
 }
+
+/** Show which RPC host is in use without its path, query string, or credentials. */
+export function redactRpcUrl(value: string): string {
+  try {
+    const parsed = new URL(value);
+    return `${parsed.protocol}//${parsed.host}${parsed.search || parsed.pathname.length > 1 ? '/…' : ''}`;
+  } catch {
+    return '(invalid URL)';
+  }
+}

@@ -1,5 +1,6 @@
 import { POST } from '../app/api/actions/tip-jar/route';
-import { parseSmokeArgs } from '../src/lib/smoke';
+import { parseSmokeArgs, redactRpcUrl } from '../src/lib/smoke';
+import { getDevnetRpcUrl } from '../src/solana/config';
 
 const { wallet, repository, hostedUrl } = parseSmokeArgs(process.argv.slice(2));
 
@@ -17,7 +18,12 @@ if (!wallet) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ account: wallet }),
   });
+  console.log(hostedUrl
+    ? `Target: ${hostedUrl} (hosted; RPC is whatever that deployment is configured with)`
+    : `Target: in-process route, RPC ${redactRpcUrl(getDevnetRpcUrl())}`);
+  const started = performance.now();
   const response = hostedUrl ? await fetch(request) : await POST(request);
+  console.log(`HTTP ${response.status} in ${Math.round(performance.now() - started)} ms`);
   const result = await response.json() as {
     code?: string;
     message: string;
