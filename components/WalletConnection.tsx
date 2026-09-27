@@ -2,10 +2,31 @@
 
 import { useWalletConnection } from '@solana/react-hooks';
 import { useState } from 'react';
+import { walletConnectionMessage } from '../src/solana/walletError';
 
 export function WalletConnection() {
   const wallet = useWalletConnection();
   const [open, setOpen] = useState(false);
+  const [connectionError, setConnectionError] = useState('');
+
+  async function connect(connectorId: string) {
+    setConnectionError('');
+    try {
+      await wallet.connect(connectorId);
+      setOpen(false);
+    } catch (error) {
+      setConnectionError(walletConnectionMessage(error));
+    }
+  }
+
+  async function disconnect() {
+    setConnectionError('');
+    try {
+      await wallet.disconnect();
+    } catch (error) {
+      setConnectionError(walletConnectionMessage(error));
+    }
+  }
 
   if (!wallet.isReady) {
     return <button className="wallet-button" disabled>Finding wallets…</button>;
@@ -15,7 +36,8 @@ export function WalletConnection() {
     return (
       <div className="wallet-connected">
         <span><i />{shortAddress(wallet.wallet.account.address)}</span>
-        <button type="button" onClick={() => void wallet.disconnect()}>Disconnect</button>
+        <button type="button" onClick={() => void disconnect()}>Disconnect</button>
+        {connectionError ? <p role="alert">{connectionError}</p> : null}
       </div>
     );
   }
@@ -32,7 +54,7 @@ export function WalletConnection() {
               key={connector.id}
               type="button"
               disabled={wallet.connecting || connector.ready === false}
-              onClick={() => void wallet.connect(connector.id).then(() => setOpen(false))}
+              onClick={() => void connect(connector.id)}
             >
               <span>{connector.name}</span>
               <small>{connector.ready === false ? 'Unavailable' : 'Connect'}</small>
@@ -40,7 +62,9 @@ export function WalletConnection() {
           )) : (
             <p>No Wallet Standard wallet was detected. Install Phantom, Backpack, or Solflare.</p>
           )}
-          {wallet.error ? <p role="alert">The wallet connection was declined or unavailable.</p> : null}
+          {connectionError || wallet.error ? (
+            <p role="alert">{connectionError || walletConnectionMessage(wallet.error)}</p>
+          ) : null}
         </div>
       ) : null}
     </div>
