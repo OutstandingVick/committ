@@ -27,6 +27,13 @@ export async function sendDevnetRpcRequest<T>(request: { send(): Promise<T> }): 
           503,
         );
       }
+      if (classifyRpcFailure(error) === 'misconfigured') {
+        throw new CommittError(
+          'DEVNET_RPC_MISCONFIGURED',
+          'The configured Solana devnet RPC endpoint could not be reached. Check its URL.',
+          503,
+        );
+      }
       if (attempt >= delays.length) {
         throw new CommittError(
           'DEVNET_RPC_UNAVAILABLE',
