@@ -28,6 +28,9 @@ export function getDevnetRpcUrl(): string {
   if (parsed.protocol !== 'https:' && parsed.hostname !== 'localhost') {
     throw misconfigured('The Solana RPC endpoint must use HTTPS.');
   }
+  if (/(^|\.)helius-rpc\.com$/.test(parsed.hostname) && !parsed.hostname.startsWith('devnet.')) {
+    throw misconfigured('The Helius RPC endpoint must be the devnet endpoint.');
+  }
   return parsed.toString();
 }
 
