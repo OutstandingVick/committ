@@ -1,6 +1,6 @@
 # Current project status
 
-Last reviewed: 2026-09-09.
+Last reviewed: 2026-09-27.
 
 ## Working now
 
@@ -17,6 +17,8 @@ Last reviewed: 2026-09-09.
 The hosted Blink descriptor (`GET /api/actions/tip-jar`) works. The hosted transaction endpoint (`POST /api/actions/tip-jar`) currently returns `503 DEVNET_RPC_UNAVAILABLE` because shared public devnet RPC endpoints throttle the Cloudflare runtime.
 
 To unblock it, configure `COMMITT_SOLANA_RPC_URL` with a dedicated HTTPS devnet endpoint, redeploy the same application, then run the Blink smoke test and a wallet-rejection test before approving any transaction.
+
+The 503 is consistent with throttling but was not proven: before this revision any RPC failure, including a bad key or URL, produced the same code. RPC failures now report `DEVNET_RPC_UNAUTHORIZED` or `DEVNET_RPC_MISCONFIGURED` where applicable; see the diagnosis table in [deployment.md](deployment.md).
 
 ## Deliberately not implemented
 
