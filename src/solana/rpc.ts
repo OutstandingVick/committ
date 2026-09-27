@@ -6,6 +6,7 @@ import {
 } from '@solana/kit';
 import { CommittError } from '../agent/errors';
 import { getDevnetRpcUrl } from './config';
+import { classifyRpcFailure } from './rpcFailure';
 
 export function createDevnetRpc() {
   return createSolanaRpc(devnet(getDevnetRpcUrl()));
@@ -18,7 +19,21 @@ export async function sendDevnetRpcRequest<T>(request: { send(): Promise<T> }): 
   for (let attempt = 0; ; attempt += 1) {
     try {
       return await request.send();
-    } catch {
+    } catch (error) {
+      if (classifyRpcFailure(error) === 'unauthorized') {
+        throw new CommittError(
+          'DEVNET_RPC_UNAUTHORIZED',
+          'The configured Solana devnet RPC rejected the request. Check the endpoint key.',
+          503,
+        );
+      }
+      if (classifyRpcFailure(error) === 'misconfigured') {
+        throw new CommittError(
+          'DEVNET_RPC_MISCONFIGURED',
+          'The configured Solana devnet RPC endpoint could not be reached. Check its URL.',
+          503,
+        );
+      }
       if (attempt >= delays.length) {
         throw new CommittError(
           'DEVNET_RPC_UNAVAILABLE',

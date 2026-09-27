@@ -1,22 +1,29 @@
 import { POST } from '../app/api/actions/tip-jar/route';
+import { parseSmokeArgs, redactRpcUrl } from '../src/lib/smoke';
+import { getDevnetRpcUrl } from '../src/solana/config';
 
-const wallet = process.argv[2]?.trim();
-const repository = process.argv[3]?.trim() || 'https://github.com/OutstandingVick/committ';
+const { wallet, repository, hostedUrl } = parseSmokeArgs(process.argv.slice(2));
 
 if (!wallet) {
-  console.error('Usage: npm run smoke:blink -- <DEVNET_WALLET_ADDRESS> [GITHUB_REPOSITORY_URL]');
+  console.error('Usage: npm run smoke:blink -- <DEVNET_WALLET_ADDRESS> [GITHUB_REPOSITORY_URL] [--url <HOSTED_ORIGIN>]');
   process.exitCode = 1;
 } else {
-  const actionUrl = new URL('http://localhost/api/actions/tip-jar');
+  const actionUrl = new URL('/api/actions/tip-jar', hostedUrl ?? 'http://localhost');
   actionUrl.searchParams.set('repo', repository);
   actionUrl.searchParams.set('authority', wallet);
   actionUrl.searchParams.set('operation', 'initialize');
 
-  const response = await POST(new Request(actionUrl, {
+  const request = new Request(actionUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ account: wallet }),
-  }));
+  });
+  console.log(hostedUrl
+    ? `Target: ${hostedUrl} (hosted; RPC is whatever that deployment is configured with)`
+    : `Target: in-process route, RPC ${redactRpcUrl(getDevnetRpcUrl())}`);
+  const started = performance.now();
+  const response = hostedUrl ? await fetch(request) : await POST(request);
+  console.log(`HTTP ${response.status} in ${Math.round(performance.now() - started)} ms`);
   const result = await response.json() as {
     code?: string;
     message: string;
