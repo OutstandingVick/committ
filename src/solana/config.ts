@@ -1,4 +1,5 @@
 import { address, type Address } from '@solana/kit';
+import { CommittError } from '../agent/errors';
 
 export const DEVNET_CHAIN = 'solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1' as const;
 export const DEVNET_RPC_URL = 'https://api.devnet.solana.com' as const;
@@ -18,9 +19,14 @@ export function getDevnetRpcUrl(): string {
   const configured = process.env.COMMITT_SOLANA_RPC_URL?.trim();
   if (!configured) return DEVNET_RPC_URL;
 
-  const parsed = new URL(configured);
+  let parsed: URL;
+  try {
+    parsed = new URL(configured);
+  } catch {
+    throw misconfigured('The configured Solana RPC endpoint is not a valid URL.');
+  }
   if (parsed.protocol !== 'https:' && parsed.hostname !== 'localhost') {
-    throw new Error('The Solana RPC endpoint must use HTTPS.');
+    throw misconfigured('The Solana RPC endpoint must use HTTPS.');
   }
   return parsed.toString();
 }
@@ -31,4 +37,8 @@ export function parseSolanaAddress(value: string, label = 'wallet'): Address {
   } catch {
     throw new Error(`The ${label} address is invalid.`);
   }
+}
+
+function misconfigured(message: string): CommittError {
+  return new CommittError('DEVNET_RPC_MISCONFIGURED', message, 503);
 }
