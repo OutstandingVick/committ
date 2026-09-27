@@ -20,6 +20,10 @@ To unblock it, configure `COMMITT_SOLANA_RPC_URL` with a dedicated HTTPS devnet 
 
 The 503 is consistent with throttling but was not proven: before this revision any RPC failure, including a bad key or URL, produced the same code. RPC failures now report `DEVNET_RPC_UNAUTHORIZED` or `DEVNET_RPC_MISCONFIGURED` where applicable; see the diagnosis table in [deployment.md](deployment.md).
 
+## Smoke test scope
+
+`npm run smoke:blink` without `--url` proves the local `.env.local` RPC works and an initialize transaction simulates. It says nothing about the hosted environment. With `--url`, it exercises the deployed route and its configured RPC. Neither mode signs or sends.
+
 ## Deliberately not implemented
 
 - Mainnet deployment or transactions.
