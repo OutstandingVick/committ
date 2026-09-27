@@ -13,6 +13,19 @@ Copy `.env.example` to `.env.local` for local development. Hosted values belong 
 
 The Sites project is recorded in `.openai/hosting.json`. After changing hosted environment values, publish a new version so the new environment revision is applied. Never put RPC credentials in the manifest, Git configuration, or committed files.
 
+## Diagnosing hosted RPC failures
+
+The POST route distinguishes RPC failures so one smoke run identifies the cause:
+
+| Response | Meaning | Fix |
+|---|---|---|
+| `503 DEVNET_RPC_UNAVAILABLE` after ~3.5 s, provider dashboard shows no requests | The variable is not reaching the deployment; it is using the public fallback | Set it in the production environment and publish a new version |
+| `503 DEVNET_RPC_UNAVAILABLE`, provider dashboard shows 429s | Genuine provider rate limit | Check plan limits |
+| `503 DEVNET_RPC_UNAUTHORIZED` (fast) | The endpoint rejected the key | Re-copy the devnet URL including `api-key` |
+| `503 DEVNET_RPC_MISCONFIGURED` (fast) | Invalid, non-HTTPS, unreachable, or non-devnet Helius URL | Correct the URL shape |
+
+Error messages never include the endpoint URL or key.
+
 ## Program release gate
 
 1. Run `NO_DNA=1 anchor build` and archive the generated IDL and binary hash.
