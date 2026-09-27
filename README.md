@@ -36,7 +36,7 @@ npm run check:program
 To exercise transaction construction and simulation without signing or sending anything:
 
 ```bash
-npm run smoke:blink -- <DEVNET_WALLET_ADDRESS> [GITHUB_REPOSITORY_URL]
+npm run smoke:blink -- <DEVNET_WALLET_ADDRESS> [GITHUB_REPOSITORY_URL] [--url <HOSTED_ORIGIN>]
 ```
 
 The repository URL defaults to `https://github.com/OutstandingVick/committ`.
