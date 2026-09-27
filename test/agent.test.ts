@@ -119,3 +119,9 @@ test('limits analysis bursts per client key', () => {
   assert.equal(consumeRateLimit(key, 1_000), false);
   assert.equal(consumeRateLimit(key, 62_000), true);
 });
+
+test('reports a rejected RPC key as unauthorized, not throttled', () => {
+  const error = publicError(new Error('HTTP error (403): Forbidden'));
+  assert.equal(error.code, 'DEVNET_RPC_UNAUTHORIZED');
+  assert.equal(error.status, 503);
+});

@@ -11,7 +11,14 @@ export class CommittError extends Error {
 
 export function publicError(error: unknown): CommittError {
   if (error instanceof CommittError) return error;
-  if (error instanceof Error && /HTTP error \((?:403|429|5\d\d)\)/.test(error.message)) {
+  if (error instanceof Error && /HTTP error \((?:401|403)\)/.test(error.message)) {
+    return new CommittError(
+      'DEVNET_RPC_UNAUTHORIZED',
+      'The configured Solana devnet RPC rejected the request. Check the endpoint key.',
+      503,
+    );
+  }
+  if (error instanceof Error && /HTTP error \((?:429|5\d\d)\)/.test(error.message)) {
     return new CommittError(
       'DEVNET_RPC_UNAVAILABLE',
       'The Solana devnet RPC is temporarily unavailable. Try again shortly.',
