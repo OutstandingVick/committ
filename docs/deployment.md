@@ -43,7 +43,7 @@ The web client currently exposes initialize and tip only. Withdrawal exists in t
 ## Blink release gate
 
 1. Run `npm run check` and confirm `npm audit` reports no known vulnerabilities.
-2. Call the initialize action with a funded devnet public address and verify simulation passes; do not sign during smoke testing.
+2. Call the initialize action with a funded devnet public address and verify simulation passes; do not sign during smoke testing. `npm run smoke:blink -- <WALLET>` runs the route in-process with `.env.local` and verifies only the local configuration. Add `--url <HOSTED_ORIGIN>` to POST to the deployment itself; an owner-private deployment may instead require running the same POST from a signed-in browser session.
 3. Confirm the response identifies devnet, the deployed program, campaign PDA, fee payer, rent, fee, and compute use.
 4. Test wallet rejection and ensure the UI reports that nothing was sent.
 5. Send only after a human checks the transaction-review box in the interface.
