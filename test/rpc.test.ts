@@ -29,3 +29,13 @@ test('misconfigured RPC failures are not retried', async () => {
   await assert.rejects(sendDevnetRpcRequest(request), { code: 'DEVNET_RPC_MISCONFIGURED' });
   assert.equal(calls(), 1);
 });
+
+test('throttling still classifies as unavailable', () => {
+  assert.equal(classifyRpcFailure(new Error('HTTP error (429): Too Many Requests')), 'unavailable');
+  assert.equal(classifyRpcFailure(undefined), 'unavailable');
+});
+
+test('RPC error messages never echo the endpoint or key', async () => {
+  const { request } = failing('HTTP error (401) at https://devnet.helius-rpc.com/?api-key=SECRET123');
+  await assert.rejects(sendDevnetRpcRequest(request), (error: Error) => !/SECRET123|helius/.test(error.message));
+});
