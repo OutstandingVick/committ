@@ -6,7 +6,7 @@ Required production configuration:
 
 - `GITHUB_TOKEN`: read-only GitHub token for reliable public API limits.
 - `COMMITT_GITHUB_API_URL`: defaults to `https://api.github.com`.
-- `COMMITT_SOLANA_RPC_URL`: a dedicated, trusted devnet HTTPS RPC endpoint. Shared public endpoints are not reliable enough for the hosted worker.
+- `COMMITT_SOLANA_RPC_URL`: a dedicated, trusted devnet HTTPS RPC endpoint. Shared public endpoints are not reliable enough for the hosted worker. For Helius use the **devnet** URL, `https://devnet.helius-rpc.com/?api-key=<KEY>`; Helius mainnet hosts are rejected. Store it as a secret in the Sites production environment. When unset, the app silently falls back to `https://api.devnet.solana.com`.
 - `COMMITT_TIP_JAR_PROGRAM_ID`: optional override for a different verified devnet program. The current deployed ID is the app default.
 
 Copy `.env.example` to `.env.local` for local development. Hosted values belong in the Sites environment and must not be committed.
