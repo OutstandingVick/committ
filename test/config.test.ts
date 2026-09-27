@@ -20,3 +20,10 @@ test('invalid or non-HTTPS RPC URLs raise a typed error without echoing the valu
   process.env.COMMITT_SOLANA_RPC_URL = 'http://devnet.example.com';
   assert.throws(() => getDevnetRpcUrl(), { code: 'DEVNET_RPC_MISCONFIGURED' });
 });
+
+test('accepts the Helius devnet endpoint and rejects Helius mainnet', () => {
+  process.env.COMMITT_SOLANA_RPC_URL = 'https://devnet.helius-rpc.com/?api-key=test';
+  assert.match(getDevnetRpcUrl(), /^https:\/\/devnet\.helius-rpc\.com\//);
+  process.env.COMMITT_SOLANA_RPC_URL = 'https://mainnet.helius-rpc.com/?api-key=test';
+  assert.throws(() => getDevnetRpcUrl(), { code: 'DEVNET_RPC_MISCONFIGURED' });
+});
