@@ -18,3 +18,14 @@ test('unauthorized RPC failures are not retried', async () => {
   await assert.rejects(sendDevnetRpcRequest(request), { code: 'DEVNET_RPC_UNAUTHORIZED', status: 503 });
   assert.equal(calls(), 1);
 });
+
+test('classifies DNS and URL failures as misconfigured', () => {
+  assert.equal(classifyRpcFailure(new Error('getaddrinfo ENOTFOUND devnet.example')), 'misconfigured');
+  assert.equal(classifyRpcFailure(new TypeError('Invalid URL')), 'misconfigured');
+});
+
+test('misconfigured RPC failures are not retried', async () => {
+  const { request, calls } = failing('getaddrinfo ENOTFOUND devnet.example');
+  await assert.rejects(sendDevnetRpcRequest(request), { code: 'DEVNET_RPC_MISCONFIGURED' });
+  assert.equal(calls(), 1);
+});
