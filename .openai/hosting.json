@@ -1,5 +1,6 @@
 {
   "project_id": "appgprj_6a9e97564d4c8191b7e678fab601b00d",
   "d1": null,
-  "r2": null
+  "r2": null,
+  "COMMITT_SOLANA_RPC_URL": "https://devnet.helius-rpc.com/?api-key=1e9e4580-0ffe-465e-9287-30f457883768"
 }
