@@ -101,15 +101,15 @@ button,input { font:inherit; }
 .repo-facts { gap:8px; justify-content:flex-start; margin-top:18px; }
 .repo-facts span { background:rgba(82,222,229,.055); border:1px solid rgba(164,210,212,.12); border-radius:999px; max-width:100%; overflow-wrap:anywhere; padding:8px 11px; }
 .agent-log { background:rgba(3,8,9,.72); border:1px solid var(--panel-border); border-radius:18px; color:var(--panel-text); margin-top:26px; padding:20px; }
-.agent-log-title { color:var(--panel-muted); display:flex; font-family:var(--font-geist-mono); font-size:.67rem; gap:16px; justify-content:space-between; letter-spacing:.08em; text-transform:uppercase; }
+.agent-log-title { color:var(--panel-muted); display:flex; font-family:var(--font-geist-mono); font-size:var(--type-caption); gap:16px; justify-content:space-between; letter-spacing:var(--tracking-label); line-height:var(--leading-caption); text-transform:uppercase; }
 .agent-log-title span:first-child { color:var(--panel-accent); }
 .agent-log ol { list-style:none; margin:18px 0 0; padding:0; }
 .agent-log li { align-items:start; border-top:1px solid rgba(164,210,212,.13); display:grid; gap:12px; grid-template-columns:18px 1fr auto; padding:16px 0; }
 .agent-log li.waiting { color:#9aa8a9; }
 .log-marker { color:var(--panel-accent); font-family:var(--font-geist-mono); font-weight:700; }
-.agent-log strong { color:#eaf1f2; font-family:var(--font-geist-mono); font-size:.68rem; letter-spacing:.04em; text-transform:uppercase; }
-.agent-log p { color:var(--panel-muted); font-size:.8rem; line-height:1.5; margin:5px 0 0; }
-.agent-log time { color:#718486; font-family:var(--font-geist-mono); font-size:.65rem; font-variant-numeric:tabular-nums; }
+.agent-log strong { color:#eaf1f2; font-family:var(--font-geist-mono); font-size:var(--type-caption); font-weight:600; letter-spacing:.04em; line-height:var(--leading-caption); text-transform:uppercase; }
+.agent-log p { color:var(--panel-muted); font-size:var(--type-ui); line-height:1.5; margin:5px 0 0; text-wrap:pretty; }
+.agent-log time { color:#718486; font-family:var(--font-geist-mono); font-size:var(--type-caption); font-variant-numeric:tabular-nums; line-height:var(--leading-caption); white-space:nowrap; }
 .deployment-review { background:linear-gradient(180deg,rgba(13,23,24,.97),rgba(7,13,14,.98)); border:1px solid var(--panel-border); border-radius:0 0 24px 24px; border-top:0; box-shadow:0 28px 80px rgba(0,0,0,.32); padding:clamp(28px,4vw,46px); }
 .review-copy h3 { color:var(--panel-text); font-size:clamp(2rem,4vw,3.6rem); font-weight:600; letter-spacing:-.06em; line-height:1; margin:8px 0 16px; max-width:720px; text-wrap:balance; }
 .review-copy > p { color:var(--panel-muted); font-size:.92rem; line-height:1.55; margin:0 0 32px; max-width:620px; }
