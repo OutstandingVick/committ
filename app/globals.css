@@ -70,8 +70,9 @@ button,input { font:inherit; }
 .evidence-grid p { color:var(--panel-muted); font-size:.82rem; line-height:1.55; margin:18px 0 0; text-wrap:pretty; }
 .repo-facts { gap:8px; justify-content:flex-start; margin-top:18px; }
 .repo-facts span { background:rgba(82,222,229,.055); border:1px solid rgba(164,210,212,.12); border-radius:999px; max-width:100%; overflow-wrap:anywhere; padding:8px 11px; }
-.agent-log { background:var(--ink); color:white; margin-top:26px; padding:18px; }
-.agent-log-title { color:#9fa49b; display:flex; font-family:var(--font-geist-mono); font-size:.6rem; justify-content:space-between; letter-spacing:.07em; text-transform:uppercase; }
+.agent-log { background:rgba(3,8,9,.72); border:1px solid var(--panel-border); border-radius:18px; color:var(--panel-text); margin-top:26px; padding:20px; }
+.agent-log-title { color:var(--panel-muted); display:flex; font-family:var(--font-geist-mono); font-size:.67rem; gap:16px; justify-content:space-between; letter-spacing:.08em; text-transform:uppercase; }
+.agent-log-title span:first-child { color:var(--panel-accent); }
 .agent-log ol { list-style:none; margin:18px 0 0; padding:0; }
 .agent-log li { align-items:start; border-top:1px solid #343831; display:grid; gap:12px; grid-template-columns:18px 1fr auto; padding:14px 0; }
 .agent-log li.waiting { color:#aeb3aa; }
