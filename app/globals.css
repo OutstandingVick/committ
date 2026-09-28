@@ -62,7 +62,7 @@ button,input { font:inherit; }
 .report-kicker { color:var(--panel-accent); font-family:var(--font-geist-mono); font-size:.7rem; letter-spacing:.1em; margin:0 0 12px; text-transform:uppercase; }
 .report-heading h2 { color:var(--panel-text); font-size:clamp(2.8rem,6vw,5.5rem); font-weight:620; letter-spacing:-.07em; line-height:.9; margin:0; text-wrap:balance; }
 .template-badge { background:rgba(82,222,229,.08); border:1px solid rgba(82,222,229,.3); border-radius:999px; color:#bff8fa; font-family:var(--font-geist-mono); font-size:.65rem; padding:10px 13px; text-transform:uppercase; white-space:nowrap; }
-.report-summary { font-size:1rem; line-height:1.55; margin:32px 0; max-width:760px; }
+.report-summary { color:#c5d1d2; font-size:clamp(1rem,1.4vw,1.18rem); line-height:1.65; margin:32px 0 38px; max-width:68ch; text-wrap:pretty; }
 .evidence-grid { border-bottom:1px solid var(--line); border-top:1px solid var(--line); display:grid; grid-template-columns:repeat(3,1fr); }
 .evidence-grid article { border-right:1px solid var(--line); padding:18px 16px 20px 0; }
 .evidence-grid article + article { padding-left:16px; }
