@@ -154,6 +154,7 @@ button,input { font:inherit; }
 .transaction-review dd { font-family:var(--font-geist-mono); font-size:var(--type-caption); font-variant-numeric:tabular-nums slashed-zero; line-height:var(--leading-caption); margin:0; overflow-wrap:anywhere; text-align:right; }
 .transaction-approval { align-items:start; display:flex; font-size:var(--type-ui); gap:8px; line-height:1.5; margin-top:14px; }
 .transaction-approval input { margin-top:2px; }
+.fee-note { color:var(--muted); font-size:var(--type-caption); line-height:var(--leading-caption); margin:10px 0 0; text-wrap:pretty; }
 .transaction-proof { background:#fff2c7; display:grid!important; gap:8px!important; grid-template-columns:1fr!important; margin-top:12px; padding:14px; }
 .transaction-proof.confirmed { background:#d9efca; }
 .transaction-proof code { font-size:var(--type-caption); font-variant-numeric:tabular-nums slashed-zero; line-height:var(--leading-caption); overflow-wrap:anywhere; }
