@@ -12,6 +12,7 @@ Last reviewed: 2026-09-28.
 - Deployed Anchor program at `6NkMViXG4f2FGBMRdjEceN3fQM3fUvTbkbEo17oGRJ6y`.
 - Owner-private web deployment at `https://committ.outstandingvick.chatgpt.site`.
 - Hosted Blink transaction endpoint (`POST /api/actions/tip-jar`) on a dedicated Helius devnet RPC.
+- First end-to-end devnet campaign (see below).
 
 ## Resolved: hosted RPC blocker (2026-09-28)
 
@@ -21,7 +22,23 @@ Verified from a signed-in browser session: the initialize action returned 200 wi
 
 An earlier Helius key was committed to `.openai/hosting.json` and remains in public repository history. That key has been revoked; the replacement lives only in the Sites secret. `test/secrets.test.ts` fails if an RPC key is committed again.
 
-The hosted site still runs the pre-merge build; publish from `main` to ship the wallet error messages and specific RPC error codes (`DEVNET_RPC_UNAUTHORIZED`, `DEVNET_RPC_MISCONFIGURED`; see [deployment.md](deployment.md)).
+Specific RPC error codes (`DEVNET_RPC_UNAUTHORIZED`, `DEVNET_RPC_MISCONFIGURED`) are documented in [deployment.md](deployment.md) but not yet deployed; see the stale-code follow-up below.
+
+## First end-to-end campaign (2026-09-28)
+
+Run from the hosted site with a Wallet Standard wallet on devnet. Each transaction was reviewed and approved in the interface, then signed in the wallet.
+
+| Step | Signature | Result |
+|---|---|---|
+| Initialize campaign `Ej3Dv3sgHxC8bt7qvn8vjruFrv75jtMv9mqZS1Zv7AcG` | [`3afVa4KR…wsyeoSLo`](https://explorer.solana.com/tx/3afVa4KRpUcjQGP5aqu6TvjPWG9Mjdhn4ivHRmrrH2xcMH37BHaECHb6XkGJ8rVtjFeYc7m7X23kT2K4wsyeoSLo?cluster=devnet) | Confirmed; campaign owned by the program, holding 1,102,360 lamports rent |
+| Tip 0.001 SOL, rejected in wallet | none | UI reported "Nothing was sent"; no new signature on the wallet or campaign, campaign balance unchanged |
+| Tip 0.001 SOL, approved | [`51Wc4r3F…D3ABTGX`](https://explorer.solana.com/tx/51Wc4r3FXzywAb35FBcNGnrKcRMpNGv3vFJFwB2gNGdmzXMrzT88f44pgEUjBpNNzhuPH1CDpeAuQAackD3ABTGX?cluster=devnet) | Confirmed; campaign +1,000,000 lamports, wallet −1,080,000 (tip + fee); only the wallet and campaign were writable |
+
+### Follow-ups found during the run
+
+- **Fee shown is lower than fee charged.** Review showed 0.000005 SOL; both transactions paid 0.00008 SOL. The confirmed transactions contain two Compute Budget instructions that Committ does not build, so the wallet added a priority fee after review. The review should state that the wallet may add a priority fee, or show the fee from the signed transaction.
+- **Wallet security warning.** The wallet warned that approving the tip could lose all funds, although the transaction only moved the tip and fee. Likely cause: the program has no reputation with the wallet's scanner. Candidate fixes: verified build (`solana-verify`), `security.txt` in the program, scanner allowlist review, and an explanatory note on the review screen.
+- **Hosted code is stale.** Sites v15 reused the v14 code; GitHub `main` changes (wallet error messages, specific RPC error codes) are not deployed. Determine which source Sites builds from.
 
 ## Smoke test scope
 
@@ -37,8 +54,8 @@ The hosted site still runs the pre-merge build; publish from `main` to ship the 
 
 ## Next recommended work
 
-1. Publish the current `main` to the hosted site.
-2. Create the first campaign through the wallet, record its confirmed Explorer link, and verify a wallet rejection broadcasts nothing.
+1. Make Sites build from GitHub `main` and publish it.
+2. Resolve the fee-display and wallet-warning follow-ups above.
 3. Add instruction-level LiteSVM tests for initialize, tip, withdrawal authorization, rent preservation, and overflow.
 4. Arrange an independent program audit before discussing mainnet.
 
