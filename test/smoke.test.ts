@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { parseSmokeArgs, redactRpcUrl } from '../src/lib/smoke';
+import { describeNonJsonResponse, parseSmokeArgs, redactRpcUrl } from '../src/lib/smoke';
 
 test('smoke args default the repository and leave the hosted URL unset', () => {
   assert.deepEqual(parseSmokeArgs(['Wallet111']), {
@@ -22,4 +22,13 @@ test('redacted RPC URLs never include the API key', () => {
   assert.doesNotMatch(shown, /SECRET123/);
   assert.equal(redactRpcUrl('https://api.devnet.solana.com'), 'https://api.devnet.solana.com');
   assert.equal(redactRpcUrl('nope'), '(invalid URL)');
+});
+
+test('non-JSON smoke responses are explained instead of crashing', () => {
+  assert.equal(describeNonJsonResponse(200, 'application/json; charset=utf-8', '{}'), null);
+  assert.match(
+    describeNonJsonResponse(401, 'text/html', '<body class="login-required">Log in to access</body>') ?? '',
+    /requires sign-in/,
+  );
+  assert.match(describeNonJsonResponse(502, 'text/html', '<h1>Bad gateway</h1>') ?? '', /Expected JSON.*HTTP 502/);
 });
