@@ -14,7 +14,8 @@
     "check:web": "npm run lint && npm test",
     "check:program": "NO_DNA=1 cargo test --workspace --locked",
     "check": "npm run check:web && npm run build",
-    "smoke:blink": "node --env-file-if-exists=.env.local --import tsx scripts/smoke-blink.ts"
+    "smoke:blink": "node --env-file-if-exists=.env.local --import tsx scripts/smoke-blink.ts",
+    "metrics:first-tx": "node --env-file-if-exists=.env.local --import tsx scripts/metrics-first-tx.ts"
   },
   "dependencies": {
     "@solana/client": "^1.7.0",
