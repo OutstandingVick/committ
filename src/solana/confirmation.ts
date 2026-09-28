@@ -1,4 +1,4 @@
-import { signature as parseSignature } from '@solana/kit';
+import { signature as parseSignature, type Signature } from '@solana/kit';
 import { CommittError } from '../agent/errors';
 import { createDevnetRpc, type DevnetRpc } from './rpc';
 
@@ -18,12 +18,31 @@ export async function getTransactionConfirmation(
     searchTransactionHistory: true,
   }).send();
   const status = response.value[0];
+  const confirmed = status?.confirmationStatus === 'confirmed' || status?.confirmationStatus === 'finalized';
 
   return {
     signature: transactionSignature,
     confirmationStatus: status?.confirmationStatus ?? 'not-found',
-    confirmed: status?.confirmationStatus === 'confirmed' || status?.confirmationStatus === 'finalized',
+    confirmed,
+    feeLamports: confirmed ? await readPaidFee(rpc, transactionSignature) : null,
     error: status?.err ? JSON.stringify(status.err).slice(0, 180) : null,
     explorerUrl: `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`,
   };
+}
+
+/**
+ * The fee actually charged, including any priority fee the wallet added after
+ * review. Best effort: confirmation must not fail if the lookup does.
+ */
+async function readPaidFee(rpc: DevnetRpc, transactionSignature: Signature): Promise<string | null> {
+  try {
+    const transaction = await rpc.getTransaction(transactionSignature, {
+      commitment: 'confirmed',
+      encoding: 'json',
+      maxSupportedTransactionVersion: 0,
+    }).send();
+    return transaction?.meta ? transaction.meta.fee.toString() : null;
+  } catch {
+    return null;
+  }
 }
