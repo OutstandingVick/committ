@@ -40,6 +40,10 @@ Run from the hosted site with a Wallet Standard wallet on devnet. Each transacti
 - **Wallet security warning.** The wallet warned that approving the tip could lose all funds, although the transaction only moved the tip and fee. Likely cause: the program has no reputation with the wallet's scanner. Candidate fixes: verified build (`solana-verify`), `security.txt` in the program, scanner allowlist review, and an explanatory note on the review screen.
 - **Hosted code is stale.** Sites v15 reused the v14 code; GitHub `main` changes (wallet error messages, specific RPC error codes) are not deployed. Determine which source Sites builds from.
 
+## First-transaction metric
+
+`npm run metrics:first-tx` counts wallets whose first-ever **signed** Solana transaction was a successful Committ transaction. It is derived from public devnet history on demand: nothing is stored, logged, or collected by the app, and output is aggregate counts only. Airdrops and other transfers a wallet did not sign are ignored. Wallets whose history predates the RPC's available ledger, or exceeds the page cap, are reported as `undeterminedWallets` rather than guessed.
+
 ## Smoke test scope
 
 `npm run smoke:blink` without `--url` proves the local `.env.local` RPC works and an initialize transaction simulates. It says nothing about the hosted environment. With `--url`, it exercises the deployed route and its configured RPC. Neither mode signs or sends.
