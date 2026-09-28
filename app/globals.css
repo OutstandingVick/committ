@@ -134,15 +134,15 @@ button,input { font:inherit; }
 .deployment-plan .token-plan { background:rgba(3,8,9,.7); border:1px solid var(--panel-border); border-radius:14px; color:white; display:grid; gap:6px; grid-template-columns:1fr; padding:16px; }
 .blink-transaction { border-top:1px solid var(--panel-border); margin-top:8px; padding-top:22px; }
 .blink-heading { align-items:start; display:flex!important; gap:16px!important; grid-template-columns:1fr auto!important; }
-.blink-heading h4 { font-size:1.5rem; letter-spacing:-.045em; margin:2px 0 18px; }
-.simulation-badge { background:rgba(82,222,229,.12); border:1px solid rgba(82,222,229,.3); border-radius:999px; color:#bff8fa!important; padding:8px 10px; }
+.blink-heading h4 { font-size:1.5rem; font-weight:600; letter-spacing:-.035em; line-height:1.2; margin:2px 0 18px; text-wrap:balance; }
+.simulation-badge { background:rgba(82,222,229,.12); border:1px solid rgba(82,222,229,.3); border-radius:999px; color:#bff8fa!important; font-size:var(--type-caption)!important; white-space:nowrap; padding:8px 10px; }
 .operation-tabs { display:grid!important; gap:0!important; grid-template-columns:1fr 1fr!important; }
-.operation-tabs button { background:transparent; border:1px solid var(--panel-border); border-radius:0; color:#b5c5c7; cursor:pointer; min-height:45px; }
+.operation-tabs button { background:transparent; border:1px solid var(--panel-border); border-radius:0; color:#b5c5c7; cursor:pointer; font-size:var(--type-ui); min-height:45px; }
 .operation-tabs button + button { border-left:0; }
 .operation-tabs button.active { background:rgba(82,222,229,.12); color:#d8fbfc; }
 .amount-field { align-items:center; display:flex; justify-content:space-between; margin-top:12px; }
-.amount-field > span:first-child { color:var(--panel-muted); font-family:var(--font-geist-mono); font-size:.67rem; text-transform:uppercase; }
-.amount-field input { background:rgba(255,255,255,.055); border:1px solid var(--panel-border); border-radius:10px; color:var(--panel-text); max-width:120px; min-height:42px; padding:0 10px; text-align:right; }
+.amount-field > span:first-child { color:var(--panel-muted); font-family:var(--font-geist-mono); font-size:var(--type-caption); letter-spacing:.04em; text-transform:uppercase; }
+.amount-field input { background:rgba(255,255,255,.055); border:1px solid var(--panel-border); border-radius:10px; color:var(--panel-text); font-size:var(--type-body); font-variant-numeric:tabular-nums; max-width:120px; min-height:42px; padding:0 10px; text-align:right; }
 .prepare-transaction,.sign-transaction { background:var(--panel-accent); border:1px solid #9cf4f7; color:#082224; cursor:pointer; margin-top:12px; min-height:50px; padding:0 16px; width:100%; }
 .prepare-transaction:disabled,.sign-transaction:disabled { cursor:not-allowed; opacity:.42; }
 .transaction-review { background:rgba(3,8,9,.68); border:1px solid var(--panel-border); border-radius:14px; margin-top:12px; padding:16px; }
