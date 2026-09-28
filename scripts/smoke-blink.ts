@@ -1,5 +1,5 @@
 import { POST } from '../app/api/actions/tip-jar/route';
-import { parseSmokeArgs, redactRpcUrl } from '../src/lib/smoke';
+import { describeNonJsonResponse, parseSmokeArgs, redactRpcUrl } from '../src/lib/smoke';
 import { getDevnetRpcUrl } from '../src/solana/config';
 
 const { wallet, repository, hostedUrl } = parseSmokeArgs(process.argv.slice(2));
@@ -24,7 +24,13 @@ if (!wallet) {
   const started = performance.now();
   const response = hostedUrl ? await fetch(request) : await POST(request);
   console.log(`HTTP ${response.status} in ${Math.round(performance.now() - started)} ms`);
-  const result = await response.json() as {
+  const body = await response.text();
+  const nonJson = describeNonJsonResponse(response.status, response.headers.get('content-type'), body);
+  if (nonJson) {
+    console.error(nonJson);
+    process.exit(1);
+  }
+  const result = JSON.parse(body) as {
     code?: string;
     message: string;
     transaction?: string;

@@ -41,3 +41,13 @@ export function redactRpcUrl(value: string): string {
     return '(invalid URL)';
   }
 }
+
+/** Explain a non-JSON response (e.g. a hosting login page) instead of failing to parse it. */
+export function describeNonJsonResponse(status: number, contentType: string | null, body: string): string | null {
+  if (contentType?.includes('application/json')) return null;
+  if (status === 401 || /login-required|Log in to access/i.test(body)) {
+    return 'The site requires sign-in, so this request never reached Committ. '
+      + 'Run the POST from a signed-in browser console instead (see docs/deployment.md).';
+  }
+  return `Expected JSON from the action route but got ${contentType ?? 'no content type'} (HTTP ${status}).`;
+}
