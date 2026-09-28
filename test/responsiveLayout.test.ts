@@ -12,3 +12,12 @@ test('landing page keeps responsive safeguards for tablet and phone widths', asy
   assert.match(styles, /@media \(max-width:480px\)[\s\S]*\.hero h1 \{ font-size:clamp\(2\.75rem,14vw,4rem\)/);
   assert.match(styles, /@media \(max-width:480px\)[\s\S]*\.transaction-review dl div \{ grid-template-columns:1fr; \}/);
 });
+
+test('analysis states reuse the dark Committ workspace at every width', async () => {
+  const styles = await readFile(new URL('../app/globals.css', import.meta.url), 'utf8');
+
+  assert.match(styles, /--panel-accent:#52dee5/);
+  assert.match(styles, /\.analysis-report \{[^}]*background-color:var\(--panel-bg\)/);
+  assert.match(styles, /\.deployment-review \{[^}]*background:linear-gradient/);
+  assert.match(styles, /@media \(max-width:480px\)[\s\S]*\.analysis-report,\.deployment-review \{ padding:22px 16px; \}/);
+});
