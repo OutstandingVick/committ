@@ -37,6 +37,7 @@ To exercise transaction construction and simulation without signing or sending a
 
 ```bash
 npm run smoke:blink -- <DEVNET_WALLET_ADDRESS> [GITHUB_REPOSITORY_URL] [--url <HOSTED_ORIGIN>]
+npm run metrics:first-tx
 ```
 
 The repository URL defaults to `https://github.com/OutstandingVick/committ`.
