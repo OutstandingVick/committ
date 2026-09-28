@@ -90,8 +90,11 @@ button,input { font:inherit; }
 .deployment-review form > input:focus { border-color:var(--panel-accent); box-shadow:0 0 0 3px rgba(82,222,229,.12); }
 .confirmation-row { align-items:start; display:flex; font-size:.82rem; gap:10px; line-height:1.5; margin:10px 0; }
 .confirmation-row input { accent-color:var(--panel-accent); margin-top:3px; }
-.deployment-review button { background:var(--ink); border:0; color:white; cursor:pointer; min-height:50px; padding:0 18px; }
-.deployment-review button:disabled { cursor:not-allowed; opacity:.42; }
+.deployment-review button { background:linear-gradient(180deg,#b9f7f9 0%,#52dee5 64%,#31c1c8 100%); border:1px solid rgba(184,250,252,.72); border-radius:14px; color:#082224; cursor:pointer; font-weight:700; min-height:54px; padding:0 20px; transition:filter 150ms ease,transform 150ms cubic-bezier(.2,0,0,1); }
+.deployment-review button:hover:not(:disabled) { filter:brightness(1.07); }
+.deployment-review button:active:not(:disabled) { transform:scale(.96); }
+.deployment-review button:focus-visible { outline:3px solid white; outline-offset:3px; }
+.deployment-review button:disabled { background:rgba(255,255,255,.08); border-color:rgba(164,210,212,.12); color:#7f9294; cursor:not-allowed; opacity:1; }
 .deployment-plan { background:var(--paper); border:1px solid var(--line); display:grid; gap:14px; margin-top:20px; padding:18px; }
 .deployment-plan > div { display:grid; gap:4px; grid-template-columns:90px 1fr; }
 .deployment-plan span { color:var(--muted); font-family:var(--font-geist-mono); font-size:.62rem; text-transform:uppercase; }
