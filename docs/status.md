@@ -36,7 +36,7 @@ Run from the hosted site with a Wallet Standard wallet on devnet. Each transacti
 
 ### Follow-ups found during the run
 
-- **Fee shown is lower than fee charged.** Review showed 0.000005 SOL; both transactions paid 0.00008 SOL. The confirmed transactions contain two Compute Budget instructions that Committ does not build, so the wallet added a priority fee after review. The review should state that the wallet may add a priority fee, or show the fee from the signed transaction.
+- **Fee shown is lower than fee charged** (addressed). The wallet added Compute Budget instructions after review, raising the fee from 0.000005 to 0.00008 SOL. The review now labels the simulated amount as the base network fee, warns that the wallet may add a priority fee, and shows the fee actually paid, read from the confirmed transaction.
 - **Wallet security warning.** The wallet warned that approving the tip could lose all funds, although the transaction only moved the tip and fee. Likely cause: the program has no reputation with the wallet's scanner. Candidate fixes: verified build (`solana-verify`), `security.txt` in the program, scanner allowlist review, and an explanatory note on the review screen.
 - **Hosted code is stale.** Sites v15 reused the v14 code; GitHub `main` changes (wallet error messages, specific RPC error codes) are not deployed. Determine which source Sites builds from.
 
@@ -59,7 +59,7 @@ Run from the hosted site with a Wallet Standard wallet on devnet. Each transacti
 ## Next recommended work
 
 1. Make Sites build from GitHub `main` and publish it.
-2. Resolve the fee-display and wallet-warning follow-ups above.
+2. Resolve the wallet-warning follow-up above.
 3. Add instruction-level LiteSVM tests for initialize, tip, withdrawal authorization, rent preservation, and overflow.
 4. Arrange an independent program audit before discussing mainnet.
 
