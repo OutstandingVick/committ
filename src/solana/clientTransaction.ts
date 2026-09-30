@@ -51,7 +51,7 @@ export async function requestBlinkTransaction(input: {
 
 export async function sendBlinkTransaction(
   session: WalletSession,
-  review: BlinkTransactionReview,
+  review: { transaction: string },
 ): Promise<Signature> {
   if (!session.sendTransaction) throw new Error('This wallet cannot send Solana transactions.');
   const transactionBytes = getBase64Encoder().encode(review.transaction);
@@ -112,4 +112,69 @@ function readApiMessage(value: unknown): string {
     return value.message;
   }
   return 'Committ could not prepare this transaction.';
+}
+
+export const TOKEN_2022_PROGRAM_ID = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb';
+
+export interface TokenTransactionReview {
+  message: string;
+  transaction: string;
+  meta: {
+    cluster: 'devnet';
+    operation: 'create-token';
+    programId: string;
+    mint: string;
+    tokenAccount: string;
+    feePayer: string;
+    name: string;
+    symbol: string;
+    uri: string;
+    supply: string;
+    decimals: number;
+    mintAuthority: 'revoked';
+    freezeAuthority: 'none';
+    computeUnits: string | null;
+    estimatedFeeLamports: string;
+    estimatedRentLamports: string;
+    lastValidBlockHeight: string;
+    simulation: 'passed';
+  };
+}
+
+export async function requestTokenTransaction(input: {
+  account: Address;
+  repo: string;
+  name: string;
+  symbol: string;
+  supply: string;
+}): Promise<TokenTransactionReview> {
+  const url = new URL('/api/actions/token', window.location.origin);
+  url.searchParams.set('repo', input.repo);
+  url.searchParams.set('name', input.name);
+  url.searchParams.set('symbol', input.symbol);
+  url.searchParams.set('supply', input.supply);
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ account: input.account }),
+  });
+  const body: unknown = await response.json();
+  if (!response.ok) throw new Error(readApiMessage(body));
+  if (!isTokenTransactionReview(body, input.account)) throw new Error('Committ returned an invalid token transaction.');
+  return body;
+}
+
+/** Refuse anything but a simulated devnet Token-2022 launch paid by, and minted to, the connected wallet with supply locked. */
+export function isTokenTransactionReview(value: unknown, account: string): value is TokenTransactionReview {
+  if (!value || typeof value !== 'object') return false;
+  const candidate = value as Partial<TokenTransactionReview>;
+  return typeof candidate.transaction === 'string'
+    && candidate.transaction.length > 40
+    && candidate.meta?.cluster === 'devnet'
+    && candidate.meta.simulation === 'passed'
+    && candidate.meta.operation === 'create-token'
+    && candidate.meta.programId === TOKEN_2022_PROGRAM_ID
+    && candidate.meta.feePayer === account
+    && candidate.meta.mintAuthority === 'revoked'
+    && candidate.meta.freezeAuthority === 'none';
 }
