@@ -4,7 +4,7 @@ Paste a public GitHub repository URL, identify one useful on-chain feature, and 
 
 The current MVP supports one template: a SOL tip jar on **Solana devnet**. Committ analyzes a bounded set of repository files, derives a repository-specific campaign PDA, builds and simulates an unsigned transaction, and asks the connected wallet to review, sign, and send it. Repository code is never cloned or executed, and private keys never reach the server.
 
-> **Current status:** the program and application are deployed, but the hosted Blink POST route still needs a dedicated devnet RPC endpoint. Token launch and mainnet deployment are not implemented. Read [docs/status.md](docs/status.md) before starting work.
+> **Current status:** the tip-jar program and application are deployed on devnet, and creators can launch a fixed-supply devnet test token for a repository. Mainnet deployment and third-party token launches are not implemented. Read [docs/status.md](docs/status.md) before starting work.
 
 ## Start here
 
@@ -73,7 +73,7 @@ The deployed devnet program is [`6NkM…GRJ6y`](https://explorer.solana.com/addr
 - The Blink server returns unsigned transactions; the wallet owns signing and broadcasting.
 - Every prepared transaction must pass devnet simulation first.
 - Mainnet is deliberately unavailable.
-- ClawPump output is a planning object only. No token-launch command is executed.
+- Devnet tokens use the standard Token-2022 program with no custom code: fixed supply, mint authority revoked, no freeze authority. ClawPump output is a planning object only.
 - The program contains a withdrawal instruction, but the web client does not expose withdrawal yet.
 - The template has received an internal review, not an independent audit.
 

@@ -1,5 +1,5 @@
 import {
-  appendTransactionMessageInstruction,
+  appendTransactionMessageInstructions,
   compileTransaction,
   createTransactionMessage,
   getBase64Decoder,
@@ -25,9 +25,9 @@ export interface UnsignedTransaction {
 
 export async function buildUnsignedTransaction(input: {
   feePayer: Address;
-  instruction: Instruction;
   rpc: DevnetRpc;
-}): Promise<UnsignedTransaction> {
+} & ({ instruction: Instruction } | { instructions: readonly Instruction[] })): Promise<UnsignedTransaction> {
+  const instructions = 'instructions' in input ? input.instructions : [input.instruction];
   const { value: lifetime } = await sendDevnetRpcRequest(
     input.rpc.getLatestBlockhash({ commitment: 'confirmed' }),
   );
@@ -35,7 +35,7 @@ export async function buildUnsignedTransaction(input: {
     createTransactionMessage({ version: 0 }),
     (current) => setTransactionMessageFeePayer(input.feePayer, current),
     (current) => setTransactionMessageLifetimeUsingBlockhash(lifetime, current),
-    (current) => appendTransactionMessageInstruction(input.instruction, current),
+    (current) => appendTransactionMessageInstructions(instructions, current),
   );
   const transaction = compileTransaction(message);
 
