@@ -5,6 +5,7 @@ import { FormEvent, useState } from 'react';
 import type { AnalysisResult, ApiErrorBody, DeploymentPlan } from '../src/domain/committ';
 import { BlinkTransaction } from './BlinkTransaction';
 import { TokenLaunch } from './TokenLaunch';
+import { getTemplate } from '../src/templates/registry';
 
 export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
   const wallet = useWalletConnection();
@@ -14,6 +15,7 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const template = getTemplate(analysis.classification.recommendedTemplate);
   const connectedAuthority = wallet.connected ? wallet.wallet?.account.address : undefined;
   const displayedAuthority = connectedAuthority || authority;
   const plan = preparedPlan?.authority === (displayedAuthority || null) ? preparedPlan : null;
@@ -62,7 +64,7 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
         />
         <label className="confirmation-row">
           <input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} />
-          <span>I reviewed the SOL tip-jar template and confirm devnet preparation.</span>
+          <span>I reviewed the {template.name.toLowerCase()} template and confirm devnet preparation.</span>
         </label>
         <button type="submit" disabled={!confirmed || loading}>{loading ? 'Preparing…' : 'Prepare devnet plan →'}</button>
         {error ? <p className="form-message form-error" role="alert">{error}</p> : null}
@@ -75,13 +77,17 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
           <div><span>Program</span><strong>{plan.programId ?? 'Awaiting deployment'}</strong></div>
           <ul>{plan.checks.map((check) => <li key={check}>✓ {check}</li>)}</ul>
           {plan.explorerUrl ? <a href={plan.explorerUrl} target="_blank" rel="noreferrer">Open Solana Explorer ↗</a> : null}
-          {plan.status === 'ready-for-wallet' ? <BlinkTransaction blinkUrl={plan.blinkUrl} /> : null}
           {plan.status === 'ready-for-wallet' ? (
-            <TokenLaunch
-              repoUrl={plan.repository}
-              defaultName={plan.tokenLaunch.name.slice(0, 32).trim()}
-              defaultSymbol={plan.tokenLaunch.ticker}
-            />
+            <>
+              {plan.template === 'devnet-token' ? (
+                <TokenLaunch
+                  repoUrl={plan.repository}
+                  defaultName={plan.tokenLaunch.name.slice(0, 32).trim()}
+                  defaultSymbol={plan.tokenLaunch.ticker}
+                />
+              ) : null}
+              <BlinkTransaction blinkUrl={plan.blinkUrl} />
+            </>
           ) : null}
         </div>
       ) : null}
