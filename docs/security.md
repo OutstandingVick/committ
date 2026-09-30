@@ -37,6 +37,8 @@ Status: internal template review. This is not an independent audit and must not 
 - Validate name (1-32 bytes), symbol (1-10 letters or digits), and supply (1 to 1,000,000,000 whole tokens).
 - The browser refuses any token review that is not devnet, simulated, Token-2022, paid by the connected wallet, and supply-locked.
 - Label tokens as the creator's own devnet test token, not an official token of the repository.
+- Description (up to 160 bytes) and image URL (HTTPS only, no credentials, up to 160 bytes) are stored on-chain as metadata fields; the transaction is refused if it would exceed 1,232 bytes.
+- `/api/token-metadata` only serves JSON for mints whose on-chain URI points to it, re-validates image and repository URLs as HTTPS, and stores nothing.
 
 ## Signing boundary
 
