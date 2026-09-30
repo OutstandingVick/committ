@@ -4,6 +4,7 @@ import { useWalletConnection } from '@solana/react-hooks';
 import { FormEvent, useState } from 'react';
 import type { AnalysisResult, ApiErrorBody, DeploymentPlan } from '../src/domain/committ';
 import { BlinkTransaction } from './BlinkTransaction';
+import { TokenLaunch } from './TokenLaunch';
 
 export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
   const wallet = useWalletConnection();
@@ -73,13 +74,15 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
           <div><span>Cluster</span><strong>{plan.cluster}</strong></div>
           <div><span>Program</span><strong>{plan.programId ?? 'Awaiting deployment'}</strong></div>
           <ul>{plan.checks.map((check) => <li key={check}>✓ {check}</li>)}</ul>
-          <div className="token-plan">
-            <span>Token launch / not implemented</span>
-            <strong>{plan.tokenLaunch.name} · ${plan.tokenLaunch.ticker}</strong>
-            <p>This is a naming draft only. Committ cannot launch a token yet.</p>
-          </div>
           {plan.explorerUrl ? <a href={plan.explorerUrl} target="_blank" rel="noreferrer">Open Solana Explorer ↗</a> : null}
           {plan.status === 'ready-for-wallet' ? <BlinkTransaction blinkUrl={plan.blinkUrl} /> : null}
+          {plan.status === 'ready-for-wallet' ? (
+            <TokenLaunch
+              repoUrl={plan.repository}
+              defaultName={plan.tokenLaunch.name.slice(0, 32).trim()}
+              defaultSymbol={plan.tokenLaunch.ticker}
+            />
+          ) : null}
         </div>
       ) : null}
     </section>
