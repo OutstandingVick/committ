@@ -9,11 +9,19 @@ import {
   type TokenTransactionReview,
 } from '../src/solana/clientTransaction';
 
-export function TokenLaunch({ repoUrl, defaultName, defaultSymbol }: { repoUrl: string; defaultName: string; defaultSymbol: string }) {
+export function TokenLaunch({ repoUrl, defaultName, defaultSymbol, defaultDescription, defaultImage }: {
+  repoUrl: string;
+  defaultName: string;
+  defaultSymbol: string;
+  defaultDescription: string;
+  defaultImage: string;
+}) {
   const wallet = useWalletConnection();
   const [name, setName] = useState(defaultName);
   const [symbol, setSymbol] = useState(defaultSymbol);
   const [supply, setSupply] = useState('1000000');
+  const [description, setDescription] = useState(defaultDescription);
+  const [image, setImage] = useState(defaultImage);
   const [review, setReview] = useState<TokenTransactionReview | null>(null);
   const [approved, setApproved] = useState(false);
   const [phase, setPhase] = useState<'idle' | 'preparing' | 'review' | 'signing' | 'confirming' | 'success'>('idle');
@@ -37,7 +45,7 @@ export function TokenLaunch({ repoUrl, defaultName, defaultSymbol }: { repoUrl: 
     reset();
     setPhase('preparing');
     try {
-      setReview(await requestTokenTransaction({ account: wallet.wallet.account.address, repo: repoUrl, name, symbol, supply }));
+      setReview(await requestTokenTransaction({ account: wallet.wallet.account.address, repo: repoUrl, name, symbol, supply, description, image }));
       setPhase('review');
     } catch (cause) {
       setPhase('idle');
@@ -90,6 +98,14 @@ export function TokenLaunch({ repoUrl, defaultName, defaultSymbol }: { repoUrl: 
         <span>Supply</span>
         <span><input value={supply} inputMode="numeric" onChange={(event) => { setSupply(event.target.value); reset(); }} /> tokens</span>
       </label>
+      <label className="amount-field token-text-field">
+        <span>Description</span>
+        <span><textarea value={description} maxLength={160} rows={3} onChange={(event) => { setDescription(event.target.value); reset(); }} /></span>
+      </label>
+      <label className="amount-field token-text-field">
+        <span>Image URL</span>
+        <span><input value={image} maxLength={160} inputMode="url" placeholder="https://…" onChange={(event) => { setImage(event.target.value); reset(); }} /></span>
+      </label>
 
       <button className="prepare-transaction" type="button" onClick={() => void prepare()} disabled={!wallet.connected || phase === 'preparing'}>
         {!wallet.connected ? 'Connect wallet above' : phase === 'preparing' ? 'Building + simulating…' : 'Build token review →'}
@@ -102,18 +118,24 @@ export function TokenLaunch({ repoUrl, defaultName, defaultSymbol }: { repoUrl: 
             <div><dt>Action</dt><dd>Create devnet token</dd></div>
             <div><dt>Cluster</dt><dd>Solana devnet</dd></div>
             <div><dt>Program</dt><dd>{review.meta.programId} (Token-2022)</dd></div>
-            <div><dt>Token</dt><dd>{review.meta.name} · {review.meta.symbol}</dd></div>
+            <div><dt>Token</dt><dd className="token-identity">
+              {/* eslint-disable-next-line @next/next/no-img-element -- user-supplied remote token image */}
+              <img src={review.meta.image} alt="" width={32} height={32} referrerPolicy="no-referrer" />
+              {review.meta.name} · {review.meta.symbol}
+            </dd></div>
+            <div><dt>Description</dt><dd>{review.meta.description || 'None'}</dd></div>
+            <div><dt>Image</dt><dd>{review.meta.image}</dd></div>
             <div><dt>Mint</dt><dd>{review.meta.mint}</dd></div>
             <div><dt>Supply</dt><dd>{Number(review.meta.supply).toLocaleString()} to your wallet</dd></div>
             <div><dt>Mint authority</dt><dd>Revoked: supply can never increase</dd></div>
             <div><dt>Freeze authority</dt><dd>None</dd></div>
-            <div><dt>Linked repo</dt><dd>{review.meta.uri}</dd></div>
+            <div><dt>Metadata</dt><dd>{review.meta.uri}</dd></div>
             <div><dt>Fee payer</dt><dd>{review.meta.feePayer}</dd></div>
             <div><dt>Base network fee</dt><dd>{lamportsToSol(review.meta.estimatedFeeLamports)} SOL</dd></div>
             <div><dt>Account rent</dt><dd>{lamportsToSol(review.meta.estimatedRentLamports)} SOL</dd></div>
             <div><dt>Compute</dt><dd>{review.meta.computeUnits ?? 'RPC unavailable'} units</dd></div>
           </dl>
-          <p className="fee-note">This is a devnet test token with no monetary value. It is your own token, not an official token of the repository. Your wallet may add a priority fee when you sign.</p>
+          <p className="fee-note">This is a devnet test token with no monetary value. It is your own token, not an official token of the repository. Wallets load the image and description from the metadata link, which must be publicly reachable. Your wallet may add a priority fee when you sign.</p>
           <label className="transaction-approval">
             <input type="checkbox" checked={approved} onChange={(event) => setApproved(event.target.checked)} />
             <span>I reviewed this devnet token transaction and approve my wallet signing it.</span>

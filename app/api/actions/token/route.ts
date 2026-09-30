@@ -2,7 +2,7 @@ import { CommittError, publicError } from '../../../../src/agent/errors';
 import { parseRepoUrl } from '../../../../src/agent/tools/parseRepoUrl';
 import { consumeRateLimit } from '../../../../src/lib/rateLimit';
 import { parseSolanaAddress } from '../../../../src/solana/config';
-import { parseTokenSupply } from '../../../../src/solana/token/draft';
+import { defaultTokenImage, parseTokenSupply } from '../../../../src/solana/token/draft';
 import { prepareTokenLaunch } from '../../../../src/solana/token/prepareToken';
 
 export const dynamic = 'force-dynamic';
@@ -42,7 +42,10 @@ export async function POST(request: Request): Promise<Response> {
         name: url.searchParams.get('name') ?? '',
         symbol: url.searchParams.get('symbol') ?? '',
         supply: parseTokenSupply(url.searchParams.get('supply')),
+        description: url.searchParams.get('description') ?? '',
+        image: url.searchParams.get('image') ?? defaultTokenImage(repo),
       },
+      metadataOrigin: url.origin,
     });
     return json(prepared);
   } catch (error) {

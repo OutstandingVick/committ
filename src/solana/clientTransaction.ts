@@ -129,6 +129,8 @@ export interface TokenTransactionReview {
     name: string;
     symbol: string;
     uri: string;
+    description: string;
+    image: string;
     supply: string;
     decimals: number;
     mintAuthority: 'revoked';
@@ -147,12 +149,16 @@ export async function requestTokenTransaction(input: {
   name: string;
   symbol: string;
   supply: string;
+  description: string;
+  image: string;
 }): Promise<TokenTransactionReview> {
   const url = new URL('/api/actions/token', window.location.origin);
   url.searchParams.set('repo', input.repo);
   url.searchParams.set('name', input.name);
   url.searchParams.set('symbol', input.symbol);
   url.searchParams.set('supply', input.supply);
+  url.searchParams.set('description', input.description);
+  url.searchParams.set('image', input.image);
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

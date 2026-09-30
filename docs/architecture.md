@@ -30,7 +30,7 @@ The chain is framework-independent. The web route calls it; it does not duplicat
 - **Blink API:** returns only unsigned, short-lived transactions after a successful simulation.
 - **Campaign account:** owner, discriminator, byte length, repository hash, and authority are validated before tips.
 - **Cluster:** devnet by default. Mainnet is intentionally unavailable in phase one.
-- **Devnet token:** one wallet-signed Token-2022 transaction. The mint address is derived with `createAccountWithSeed` from the creator wallet and a repository-hash seed, so no mint keypair exists and only the wallet signs. The transaction initializes a metadata pointer and in-mint metadata (name, symbol, canonical repository URL), mints a fixed supply to the creator's associated token account, then revokes mint authority. No freeze authority is set.
+- **Devnet token:** one wallet-signed Token-2022 transaction. The mint address is derived with `createAccountWithSeed` from the creator wallet and a repository-hash seed, so no mint keypair exists and only the wallet signs. The transaction initializes a metadata pointer and in-mint metadata (name, symbol, canonical repository URL), mints a fixed supply to the creator's associated token account, then revokes mint authority. No freeze authority is set. Description, image URL, and repository are stored on-chain as metadata fields; the token URI points to `/api/token-metadata?mint=…`, which reads them from the chain and returns standard token JSON. Wallets can only load it when the site is publicly reachable.
 - **ClawPump:** planning-only naming draft. No provider command, authentication, or mainnet token execution exists.
 
 ## Primary recommendation
