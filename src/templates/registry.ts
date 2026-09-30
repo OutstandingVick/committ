@@ -31,6 +31,26 @@ const templates: Record<TemplateId, AuditedTemplate> = {
     ],
     sourcePath: 'programs/committ-tip-jar',
   },
+  'devnet-token': {
+    id: 'devnet-token',
+    name: 'Devnet test token',
+    description: 'Create a fixed-supply Token-2022 token for a repository, minted to the creator, with no custom program.',
+    auditStatus: 'internal-review',
+    version: '0.1.0',
+    capabilities: [
+      'Create one token per creator and repository at a seed-derived address',
+      'Record name, symbol, and repository URL in Token-2022 metadata',
+      'Mint a fixed supply to the creator, then permanently revoke mint authority',
+      'Set no freeze authority',
+    ],
+    risks: [
+      'Anyone can create a token named after any public repository; it is the creator\'s token, not an official one.',
+      'Repository ownership must be verified before any mainnet version.',
+      'Devnet tokens have no monetary value.',
+      'The creator remains the metadata update authority.',
+    ],
+    sourcePath: 'src/solana/token',
+  },
 };
 
 export function getTemplate(id: TemplateId): AuditedTemplate {
