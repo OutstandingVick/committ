@@ -154,6 +154,13 @@ button,input { font:inherit; }
 .transaction-review dd { font-family:var(--font-geist-mono); font-size:var(--type-caption); font-variant-numeric:tabular-nums slashed-zero; line-height:var(--leading-caption); margin:0; overflow-wrap:anywhere; text-align:right; }
 .transaction-approval { align-items:start; display:flex; font-size:var(--type-ui); gap:8px; line-height:1.5; margin-top:14px; }
 .transaction-approval input { margin-top:2px; }
+/* Token description and image take the full row. */
+.token-text-field { align-items:stretch; flex-direction:column; gap:6px; }
+.token-text-field > span:last-child { display:block; }
+.token-text-field input, .token-text-field textarea { background:rgba(255,255,255,.055); border:1px solid var(--panel-border); border-radius:10px; box-sizing:border-box; color:var(--panel-text); font:inherit; font-size:var(--type-body); max-width:none; min-height:42px; padding:8px 10px; text-align:left; width:100%; }
+.token-text-field textarea { resize:vertical; }
+.token-identity { align-items:center; display:inline-flex; gap:8px; }
+.token-identity img { border-radius:50%; height:32px; object-fit:cover; width:32px; }
 .fee-note { color:var(--muted); font-size:var(--type-caption); line-height:var(--leading-caption); margin:10px 0 0; text-wrap:pretty; }
 .transaction-proof { background:#fff2c7; display:grid!important; gap:8px!important; grid-template-columns:1fr!important; margin-top:12px; padding:14px; }
 .transaction-proof.confirmed { background:#d9efca; }
