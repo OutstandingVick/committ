@@ -1,4 +1,5 @@
 import type { AnalysisResult } from '../src/domain/committ';
+import { getTemplate } from '../src/templates/registry';
 import { AgentLog } from './AgentLog';
 
 export function AnalysisReport({ result }: { result: AnalysisResult }) {
@@ -12,7 +13,7 @@ export function AnalysisReport({ result }: { result: AnalysisResult }) {
       <div className="report-heading">
         <div>
           <p className="report-kicker">Recommended on-chain feature</p>
-          <h2 id="analysis-title">SOL tip jar</h2>
+          <h2 id="analysis-title">{getTemplate(result.classification.recommendedTemplate).name}</h2>
         </div>
         <span className="template-badge">Audited template / v0.1</span>
       </div>

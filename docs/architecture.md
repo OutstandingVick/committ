@@ -33,7 +33,11 @@ The chain is framework-independent. The web route calls it; it does not duplicat
 - **Devnet token:** one wallet-signed Token-2022 transaction. The mint address is derived with `createAccountWithSeed` from the creator wallet and a repository-hash seed, so no mint keypair exists and only the wallet signs. The transaction initializes a metadata pointer and in-mint metadata (name, symbol, canonical repository URL), mints a fixed supply to the creator's associated token account, then revokes mint authority. No freeze authority is set.
 - **ClawPump:** planning-only naming draft. No provider command, authentication, or mainnet token execution exists.
 
-## First template
+## Primary recommendation
+
+Every analysis recommends the project token (`devnet-token`). The review shows the token launch first and the SOL tip jar as a secondary action.
+
+## Tip-jar template
 
 The tip-jar program creates one campaign PDA per developer and repository. Anyone can send SOL to the campaign vault. Only the recorded authority can withdraw, and arithmetic uses checked operations. The template has no arbitrary CPI surface.
 

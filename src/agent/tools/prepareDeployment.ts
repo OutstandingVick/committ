@@ -3,6 +3,7 @@ import { getTemplate } from '../../templates/registry';
 import { CommittError } from '../errors';
 import { prepareClawPumpLaunch } from '../../lib/clawpump';
 import { getTipJarProgramAddress } from '../../solana/config';
+import { TOKEN_2022_PROGRAM_ADDRESS } from '../../solana/token/instructions';
 import { parseRepoUrl } from './parseRepoUrl';
 
 const SOLANA_ADDRESS = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
@@ -27,16 +28,14 @@ export function prepareDeployment(input: PrepareInput): DeploymentPlan {
 
   const repo = parseRepoUrl(input.repoUrl);
   getTemplate(input.template);
-  if (input.template !== 'tip-jar') {
-    // The token template is a wallet transaction, not a program deployment plan.
-    throw new CommittError('UNSUPPORTED_TEMPLATE', 'Only the tip-jar template has a deployment plan.');
-  }
+  const isToken = input.template === 'devnet-token';
   const authority = input.authority?.trim() || null;
   if (authority && !SOLANA_ADDRESS.test(authority)) {
     throw new CommittError('INVALID_AUTHORITY', 'Enter a valid Solana wallet address.');
   }
 
-  const programId = getTipJarProgramAddress().toString();
+  // The token uses the standard Token-2022 program; the tip jar uses Committ's deployed program.
+  const programId = isToken ? TOKEN_2022_PROGRAM_ADDRESS.toString() : getTipJarProgramAddress().toString();
 
   const blink = new URL('/api/actions/tip-jar', input.origin);
   blink.searchParams.set('repo', repo.canonicalUrl);
@@ -58,7 +57,9 @@ export function prepareDeployment(input: PrepareInput): DeploymentPlan {
       'No repository code was generated or executed.',
       'No transaction has been signed or sent.',
       authority ? 'The developer supplied the authority address.' : 'A developer wallet is still required.',
-      'The deployed template program is configured.',
+      isToken
+        ? 'Uses the standard Token-2022 program; no custom program is deployed.'
+        : 'The deployed template program is configured.',
     ],
     tokenLaunch: prepareClawPumpLaunch(repo),
   };

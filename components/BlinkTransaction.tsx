@@ -81,7 +81,7 @@ export function BlinkTransaction({ blinkUrl }: { blinkUrl: string }) {
     <section className="blink-transaction" aria-labelledby="blink-title">
       <div className="blink-heading">
         <div>
-          <span className="report-kicker">Live devnet path</span>
+          <span className="report-kicker">Also available / SOL tip jar</span>
           <h4 id="blink-title">Create it. Tip it. Prove it.</h4>
         </div>
         <span className="simulation-badge">Simulation required</span>
