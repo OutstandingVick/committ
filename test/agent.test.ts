@@ -53,10 +53,10 @@ test('reads only allowlisted files and truncates oversized text', async () => {
   assert.equal(result.truncated, true);
 });
 
-test('maps bot evidence to the fixed tip jar template', () => {
+test('maps bot evidence to the fixed project-token template', () => {
   const result = classifyProject(snapshot);
   assert.equal(result.projectKind, 'bot');
-  assert.equal(result.recommendedTemplate, 'tip-jar');
+  assert.equal(result.recommendedTemplate, 'devnet-token');
   assert.ok(result.confidence >= 0.7);
 });
 

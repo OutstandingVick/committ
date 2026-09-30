@@ -88,9 +88,15 @@ test('the browser rejects token reviews that are not locked-supply devnet launch
   assert.equal(isTokenTransactionReview({ ...review, meta: { ...review.meta, mintAuthority: 'creator' } }, creator), false);
 });
 
-test('the token is a registered template but never a program deployment plan', () => {
+test('the token plan targets Token-2022 on devnet with no custom program', () => {
   assert.equal(getTemplate('devnet-token').auditStatus, 'internal-review');
-  assert.throws(() => prepareDeployment({
-    analysisId: '12345678-abcd', repoUrl: repo.canonicalUrl, template: 'devnet-token', confirmed: true, authority: null,
-  } as Parameters<typeof prepareDeployment>[0]), { code: 'UNSUPPORTED_TEMPLATE' });
+  const plan = prepareDeployment({
+    analysisId: '12345678-abcd', repoUrl: repo.canonicalUrl, template: 'devnet-token', confirmed: true,
+    authority: creator, origin: 'https://committ.test',
+  });
+  assert.equal(plan.template, 'devnet-token');
+  assert.equal(plan.cluster, 'devnet');
+  assert.equal(plan.programId, 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+  assert.equal(plan.status, 'ready-for-wallet');
+  assert.ok(plan.checks.some((check) => /no custom program/.test(check)));
 });
