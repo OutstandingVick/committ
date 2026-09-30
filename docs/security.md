@@ -13,7 +13,7 @@ Status: internal template review. This is not an independent audit and must not 
 - Rent-exempt lamports remain in the campaign account.
 - Tip and withdrawal accounting uses checked addition.
 - Zero-value instructions are rejected.
-- No token program, oracle, remaining accounts, or arbitrary CPI surface exists.
+- The tip-jar program has no token program, oracle, remaining accounts, or arbitrary CPI surface.
 
 ## Client rules
 
@@ -27,6 +27,16 @@ Status: internal template review. This is not an independent audit and must not 
 - Return an unsigned transaction only after `simulateTransaction` succeeds with signature verification disabled.
 - Require a separate in-product approval after simulation and before invoking the wallet.
 - Rate-limit transaction construction and cap JSON request bodies.
+
+## Devnet token rules
+
+- Use only the standard System, Token-2022, and Associated Token Account programs; no custom token program.
+- Only the creator wallet signs: the mint is a seed-derived address, never a generated keypair.
+- Mint the full supply once, then revoke mint authority in the same transaction. Never set a freeze authority.
+- Refuse to build if the creator already has a token for the repository.
+- Validate name (1-32 bytes), symbol (1-10 letters or digits), and supply (1 to 1,000,000,000 whole tokens).
+- The browser refuses any token review that is not devnet, simulated, Token-2022, paid by the connected wallet, and supply-locked.
+- Label tokens as the creator's own devnet test token, not an official token of the repository.
 
 ## Signing boundary
 

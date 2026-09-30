@@ -13,6 +13,7 @@ Last reviewed: 2026-09-28.
 - Owner-private web deployment at `https://committ.outstandingvick.chatgpt.site`.
 - Hosted Blink transaction endpoint (`POST /api/actions/tip-jar`) on a dedicated Helius devnet RPC.
 - First end-to-end devnet campaign (see below).
+- Devnet test-token template: Token-2022 mint at a creator-and-repository seed address, name/symbol/repo metadata, fixed supply minted to the creator, mint authority revoked, no freeze authority. Simulated end to end on devnet; not yet created through a wallet.
 
 ## Resolved: hosted RPC blocker (2026-09-28)
 
@@ -51,7 +52,7 @@ Run from the hosted site with a Wallet Standard wallet on devnet. Each transacti
 ## Deliberately not implemented
 
 - Mainnet deployment or transactions.
-- Token creation or ClawPump command execution.
+- Mainnet token launches or ClawPump command execution.
 - A withdrawal control in the web interface.
 - Arbitrary program generation from repository content.
 - Custodial wallets or server-side signing.
