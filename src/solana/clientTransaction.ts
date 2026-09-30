@@ -67,7 +67,7 @@ export async function sendBlinkTransaction(
 export async function waitForTransactionConfirmation(
   transactionSignature: Signature,
   options: { attempts?: number; delayMs?: number } = {},
-): Promise<{ explorerUrl: string; confirmationStatus: string }> {
+): Promise<{ explorerUrl: string; confirmationStatus: string; feeLamports: string | null }> {
   const attempts = options.attempts ?? 24;
   const delayMs = options.delayMs ?? 1_250;
   for (let attempt = 0; attempt < attempts; attempt += 1) {
@@ -77,13 +77,18 @@ export async function waitForTransactionConfirmation(
       confirmationStatus?: string;
       error?: string | { message?: string } | null;
       explorerUrl?: string;
+      feeLamports?: string | null;
     };
     if (body.error) {
       const message = typeof body.error === 'string' ? body.error : body.error.message;
       throw new Error(message || 'The transaction failed.');
     }
     if (body.confirmed && body.explorerUrl) {
-      return { explorerUrl: body.explorerUrl, confirmationStatus: body.confirmationStatus ?? 'confirmed' };
+      return {
+        explorerUrl: body.explorerUrl,
+        confirmationStatus: body.confirmationStatus ?? 'confirmed',
+        feeLamports: typeof body.feeLamports === 'string' && /^\d+$/.test(body.feeLamports) ? body.feeLamports : null,
+      };
     }
     await new Promise((resolve) => setTimeout(resolve, delayMs));
   }
