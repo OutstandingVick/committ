@@ -31,6 +31,9 @@ const METADATA_POINTER_EXTENSION = 39;
 const METADATA_POINTER_INITIALIZE = 0;
 const AUTHORITY_TYPE_MINT_TOKENS = 0;
 
+/** First 8 bytes of sha256("spl_token_metadata_interface:updating_field"). */
+export const TOKEN_METADATA_UPDATE_FIELD_DISCRIMINATOR = Uint8Array.from([221, 233, 49, 45, 181, 202, 220, 200]);
+
 /** First 8 bytes of sha256("spl_token_metadata_interface:initialize_account"). */
 export const TOKEN_METADATA_INITIALIZE_DISCRIMINATOR = Uint8Array.from([210, 225, 30, 162, 88, 184, 77, 141]);
 
@@ -106,6 +109,28 @@ export function getInitializeTokenMetadataInstruction(input: {
       borshString(input.name),
       borshString(input.symbol),
       borshString(input.uri),
+    ),
+  };
+}
+
+/** Sets a custom key/value metadata field (Field::Key). The update authority signs. */
+export function getUpdateTokenMetadataFieldInstruction(input: {
+  mint: Address;
+  authority: Address;
+  key: string;
+  value: string;
+}): Instruction {
+  return {
+    programAddress: TOKEN_2022_PROGRAM_ADDRESS,
+    accounts: [
+      { address: input.mint, role: AccountRole.WRITABLE },
+      { address: input.authority, role: AccountRole.READONLY_SIGNER },
+    ],
+    data: concatBytes(
+      TOKEN_METADATA_UPDATE_FIELD_DISCRIMINATOR,
+      Uint8Array.of(3), // Field::Key
+      borshString(input.key),
+      borshString(input.value),
     ),
   };
 }
