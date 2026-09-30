@@ -20,6 +20,7 @@ export function BlinkTransaction({ blinkUrl }: { blinkUrl: string }) {
   const [error, setError] = useState('');
   const [signature, setSignature] = useState('');
   const [explorerUrl, setExplorerUrl] = useState('');
+  const [paidFeeLamports, setPaidFeeLamports] = useState<string | null>(null);
 
   async function prepare() {
     if (!wallet.wallet) {
@@ -48,6 +49,7 @@ export function BlinkTransaction({ blinkUrl }: { blinkUrl: string }) {
   async function signAndSend() {
     if (!wallet.wallet || !review || !approved) return;
     setError('');
+    setPaidFeeLamports(null);
     setPhase('signing');
     try {
       const sentSignature = await sendBlinkTransaction(wallet.wallet, review);
@@ -56,6 +58,7 @@ export function BlinkTransaction({ blinkUrl }: { blinkUrl: string }) {
       setPhase('confirming');
       const confirmation = await waitForTransactionConfirmation(sentSignature);
       setExplorerUrl(confirmation.explorerUrl);
+      setPaidFeeLamports(confirmation.feeLamports);
       setPhase('success');
     } catch (cause) {
       setPhase(review ? 'review' : 'idle');
@@ -70,6 +73,7 @@ export function BlinkTransaction({ blinkUrl }: { blinkUrl: string }) {
     setError('');
     setSignature('');
     setExplorerUrl('');
+    setPaidFeeLamports(null);
     setPhase('idle');
   }
 
@@ -109,10 +113,11 @@ export function BlinkTransaction({ blinkUrl }: { blinkUrl: string }) {
             <div><dt>Campaign</dt><dd>{review.meta.campaign}</dd></div>
             <div><dt>Fee payer</dt><dd>{review.meta.feePayer}</dd></div>
             <div><dt>Amount</dt><dd>{lamportsToSol(review.meta.amountLamports)} SOL</dd></div>
-            <div><dt>Estimated fee</dt><dd>{lamportsToSol(review.meta.estimatedFeeLamports)} SOL</dd></div>
+            <div><dt>Base network fee</dt><dd>{lamportsToSol(review.meta.estimatedFeeLamports)} SOL</dd></div>
             {review.meta.estimatedRentLamports !== '0' ? <div><dt>Account rent</dt><dd>{lamportsToSol(review.meta.estimatedRentLamports)} SOL</dd></div> : null}
             <div><dt>Compute</dt><dd>{review.meta.computeUnits ?? 'RPC unavailable'} units</dd></div>
           </dl>
+          <p className="fee-note">Your wallet may add a priority fee when you sign. The exact fee paid is shown after confirmation.</p>
           <label className="transaction-approval">
             <input type="checkbox" checked={approved} onChange={(event) => setApproved(event.target.checked)} />
             <span>I reviewed this devnet transaction and approve my wallet signing it.</span>
@@ -127,6 +132,7 @@ export function BlinkTransaction({ blinkUrl }: { blinkUrl: string }) {
         <div className={`transaction-proof ${phase === 'success' ? 'confirmed' : ''}`}>
           <span>{phase === 'success' ? 'Confirmed on devnet' : 'Transaction submitted'}</span>
           <code>{signature}</code>
+          {phase === 'success' && paidFeeLamports ? <span>Fee paid: {lamportsToSol(paidFeeLamports)} SOL</span> : null}
           <a href={explorerUrl} target="_blank" rel="noreferrer">Open transaction in Explorer ↗</a>
         </div>
       ) : null}
