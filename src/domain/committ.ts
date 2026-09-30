@@ -1,6 +1,6 @@
 export type SolanaCluster = 'devnet';
 
-export type TemplateId = 'tip-jar';
+export type TemplateId = 'tip-jar' | 'devnet-token';
 
 export interface RepoReference {
   owner: string;

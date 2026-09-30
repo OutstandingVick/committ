@@ -27,6 +27,10 @@ export function prepareDeployment(input: PrepareInput): DeploymentPlan {
 
   const repo = parseRepoUrl(input.repoUrl);
   getTemplate(input.template);
+  if (input.template !== 'tip-jar') {
+    // The token template is a wallet transaction, not a program deployment plan.
+    throw new CommittError('UNSUPPORTED_TEMPLATE', 'Only the tip-jar template has a deployment plan.');
+  }
   const authority = input.authority?.trim() || null;
   if (authority && !SOLANA_ADDRESS.test(authority)) {
     throw new CommittError('INVALID_AUTHORITY', 'Enter a valid Solana wallet address.');
