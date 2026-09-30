@@ -33,7 +33,7 @@ const templates: Record<TemplateId, AuditedTemplate> = {
   },
   'devnet-token': {
     id: 'devnet-token',
-    name: 'Devnet test token',
+    name: 'Project token',
     description: 'Create a fixed-supply Token-2022 token for a repository, minted to the creator, with no custom program.',
     auditStatus: 'internal-review',
     version: '0.1.0',
