@@ -56,7 +56,7 @@ export function classifyProject(snapshot: RepoSnapshot): ProjectClassification {
     },
     {
       label: 'Low-risk utility',
-      detail: 'A tip jar adds an optional on-chain action without moving existing application state.',
+      detail: 'A fixed-supply project token gives the repository an on-chain identity without moving existing application state.',
       weight: 1,
     },
     {
@@ -71,9 +71,9 @@ export function classifyProject(snapshot: RepoSnapshot): ProjectClassification {
     ? 'a project with an unfamiliar shape'
     : `${article(resolvedKind)} ${resolvedKind.replace('-', ' ')}`;
   return {
-    summary: `${titleCase(readableName)} appears to be ${shape}. Committ recommends an optional SOL tip jar as the smallest safe on-chain addition.`,
+    summary: `${titleCase(readableName)} appears to be ${shape}. Committ recommends launching a fixed-supply devnet token for the project as its first on-chain step.`,
     projectKind: resolvedKind,
-    recommendedTemplate: 'tip-jar',
+    recommendedTemplate: 'devnet-token',
     confidence: Math.min(0.62 + projectKind[1] * 0.06 + tipMatches * 0.025, 0.94),
     evidence,
   };

@@ -4,7 +4,7 @@ Last reviewed: 2026-09-28.
 
 ## Working now
 
-- Public GitHub repository analysis and deterministic template recommendation.
+- Public GitHub repository analysis and deterministic template recommendation. The primary recommendation is a fixed-supply devnet project token; the SOL tip jar remains available as a secondary action.
 - Wallet Standard discovery and connection.
 - Audited tip-jar initialization and tipping transaction construction.
 - Repository-specific campaign PDA derivation and account validation.
