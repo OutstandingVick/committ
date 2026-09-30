@@ -1,17 +1,20 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { address, getAddressDecoder } from '@solana/kit';
+import { address, getAddressDecoder, getAddressEncoder } from '@solana/kit';
 import { prepareDeployment } from '../src/agent/tools/prepareDeployment';
 import { parseRepoUrl } from '../src/agent/tools/parseRepoUrl';
 import { isTokenTransactionReview } from '../src/solana/clientTransaction';
-import { draftToken, parseTokenSupply, validateTokenDraft } from '../src/solana/token/draft';
+import { defaultTokenDescription, defaultTokenImage, draftToken, parseTokenSupply, validateTokenDraft } from '../src/solana/token/draft';
+import { parseTokenMetadata } from '../src/solana/token/metadata';
 import {
   TOKEN_METADATA_INITIALIZE_DISCRIMINATOR,
+  concatBytes,
+  getUpdateTokenMetadataFieldInstruction,
   getCreateAccountWithSeedInstruction,
   getInitializeMint2Instruction,
   getRevokeMintAuthorityInstruction,
 } from '../src/solana/token/instructions';
-import { deriveTokenAddresses, metadataSize, tokenSeed } from '../src/solana/token/prepareToken';
+import { deriveTokenAddresses, metadataSize, tokenMetadataUri, tokenSeed } from '../src/solana/token/prepareToken';
 import { getTemplate } from '../src/templates/registry';
 
 const repo = parseRepoUrl('https://github.com/OutstandingVick/committ');
@@ -23,15 +26,17 @@ test('drafts a name and symbol from the repository', () => {
     name: 'My Cool Repo',
     symbol: 'MYCOOLREPO',
     supply: BigInt(1_000_000),
+    description: 'Devnet test token for a/my-cool_repo, launched with Committ.',
+    image: 'https://github.com/a.png',
   });
 });
 
 test('validates token names, symbols, and supply', () => {
-  assert.equal(validateTokenDraft({ name: ' Committ ', symbol: 'cmt', supply: BigInt(1) }).symbol, 'CMT');
-  assert.throws(() => validateTokenDraft({ name: '', symbol: 'CMT', supply: BigInt(1) }), { code: 'INVALID_TOKEN_NAME' });
-  assert.throws(() => validateTokenDraft({ name: 'x'.repeat(33), symbol: 'CMT', supply: BigInt(1) }), { code: 'INVALID_TOKEN_NAME' });
-  assert.throws(() => validateTokenDraft({ name: 'Ok', symbol: 'TOO-LONG-SYM', supply: BigInt(1) }), { code: 'INVALID_TOKEN_SYMBOL' });
-  assert.throws(() => validateTokenDraft({ name: 'Ok', symbol: 'OK', supply: BigInt(1_000_000_001) }), { code: 'INVALID_TOKEN_SUPPLY' });
+  assert.equal(validateTokenDraft({ name: ' Committ ', symbol: 'cmt', supply: BigInt(1), description: '', image: 'https://github.com/a.png' }).symbol, 'CMT');
+  assert.throws(() => validateTokenDraft({ name: '', symbol: 'CMT', supply: BigInt(1), description: '', image: 'https://github.com/a.png' }), { code: 'INVALID_TOKEN_NAME' });
+  assert.throws(() => validateTokenDraft({ name: 'x'.repeat(33), symbol: 'CMT', supply: BigInt(1), description: '', image: 'https://github.com/a.png' }), { code: 'INVALID_TOKEN_NAME' });
+  assert.throws(() => validateTokenDraft({ name: 'Ok', symbol: 'TOO-LONG-SYM', supply: BigInt(1), description: '', image: 'https://github.com/a.png' }), { code: 'INVALID_TOKEN_SYMBOL' });
+  assert.throws(() => validateTokenDraft({ name: 'Ok', symbol: 'OK', supply: BigInt(1_000_000_001), description: '', image: 'https://github.com/a.png' }), { code: 'INVALID_TOKEN_SUPPLY' });
   assert.equal(parseTokenSupply('1,000,000'), BigInt(1_000_000));
   assert.throws(() => parseTokenSupply('0'), { code: 'INVALID_TOKEN_SUPPLY' });
   assert.throws(() => parseTokenSupply('1.5'), { code: 'INVALID_TOKEN_SUPPLY' });
@@ -99,4 +104,52 @@ test('the token plan targets Token-2022 on devnet with no custom program', () =>
   assert.equal(plan.programId, 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
   assert.equal(plan.status, 'ready-for-wallet');
   assert.ok(plan.checks.some((check) => /no custom program/.test(check)));
+});
+
+test('description and image are validated', () => {
+  const base = { name: 'Ok', symbol: 'OK', supply: BigInt(1), description: 'A token.', image: 'https://github.com/a.png' };
+  assert.equal(validateTokenDraft({ ...base, description: '  spaced   out  ' }).description, 'spaced out');
+  assert.throws(() => validateTokenDraft({ ...base, description: 'x'.repeat(161) }), { code: 'INVALID_TOKEN_DESCRIPTION' });
+  for (const image of ['http://example.com/a.png', 'javascript:alert(1)', 'data:image/png;base64,AA', 'https://user:pw@example.com/a.png', 'https://localhost/a.png', `https://example.com/${'i'.repeat(160)}`]) {
+    assert.throws(() => validateTokenDraft({ ...base, image }), { code: 'INVALID_TOKEN_IMAGE' }, image);
+  }
+});
+
+test('defaults use the owner avatar and repository description, bounded', () => {
+  assert.equal(defaultTokenImage(repo), 'https://github.com/OutstandingVick.png');
+  assert.match(defaultTokenDescription(repo, null), /OutstandingVick\/committ/);
+  assert.ok(new TextEncoder().encode(defaultTokenDescription(repo, 'é'.repeat(200))).byteLength <= 160);
+});
+
+test('update-field instruction encodes a custom key and value', () => {
+  const ix = getUpdateTokenMetadataFieldInstruction({ mint: other, authority: creator, key: 'image', value: 'https://x.y/z' });
+  assert.deepEqual([...ix.data!.slice(0, 8)], [221, 233, 49, 45, 181, 202, 220, 200]);
+  assert.equal(ix.data![8], 3); // Field::Key
+  assert.equal(ix.accounts![1].address, creator);
+});
+
+test('parses in-mint metadata written by the token template', () => {
+  const encoder = new TextEncoder();
+  const str = (value: string) => { const b = encoder.encode(value); const out = new Uint8Array(4 + b.length); new DataView(out.buffer).setUint32(0, b.length, true); out.set(b, 4); return out; };
+  const u32 = (n: number) => { const out = new Uint8Array(4); new DataView(out.buffer).setUint32(0, n, true); return out; };
+  const encoderAddr = getAddressEncoder();
+  const body = concatBytes(
+    Uint8Array.from(encoderAddr.encode(creator)), Uint8Array.from(encoderAddr.encode(other)),
+    str('Committ'), str('COMMITT'), str('https://committ.test/api/token-metadata?mint=' + other),
+    u32(2), str('description'), str('Hello'), str('image'), str('https://github.com/a.png'),
+  );
+  const pointer = concatBytes(Uint8Array.of(18, 0, 64, 0), new Uint8Array(64));
+  const header = new Uint8Array(4); new DataView(header.buffer).setUint16(0, 19, true); new DataView(header.buffer).setUint16(2, body.length, true);
+  const data = concatBytes(new Uint8Array(166), pointer, header, body);
+  const parsed = parseTokenMetadata(data);
+  assert.equal(parsed?.name, 'Committ');
+  assert.equal(parsed?.mint, other);
+  assert.deepEqual(parsed?.fields, { description: 'Hello', image: 'https://github.com/a.png' });
+  assert.equal(parseTokenMetadata(new Uint8Array(166)), null);
+  assert.equal(parseTokenMetadata(concatBytes(new Uint8Array(166), header, body.slice(0, 20))), null);
+});
+
+test('metadata URI points at the Committ endpoint for the mint', () => {
+  assert.equal(tokenMetadataUri('https://committ.test', other), `https://committ.test/api/token-metadata?mint=${other}`);
+  assert.ok(metadataSize('A', 'B', 'C', [['image', 'x']]) > metadataSize('A', 'B', 'C'));
 });
