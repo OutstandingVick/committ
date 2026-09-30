@@ -6,6 +6,7 @@ import type { AnalysisResult, ApiErrorBody, DeploymentPlan } from '../src/domain
 import { BlinkTransaction } from './BlinkTransaction';
 import { TokenLaunch } from './TokenLaunch';
 import { getTemplate } from '../src/templates/registry';
+import { defaultTokenDescription, defaultTokenImage } from '../src/solana/token/draft';
 
 export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
   const wallet = useWalletConnection();
@@ -84,6 +85,8 @@ export function DeploymentReview({ analysis }: { analysis: AnalysisResult }) {
                   repoUrl={plan.repository}
                   defaultName={plan.tokenLaunch.name.slice(0, 32).trim()}
                   defaultSymbol={plan.tokenLaunch.ticker}
+                  defaultDescription={defaultTokenDescription(analysis.snapshot.repo, analysis.snapshot.description)}
+                  defaultImage={defaultTokenImage(analysis.snapshot.repo)}
                 />
               ) : null}
               <BlinkTransaction blinkUrl={plan.blinkUrl} />
