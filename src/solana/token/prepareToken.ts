@@ -1,4 +1,4 @@
-import { createAddressWithSeed, getAddressEncoder, getProgramDerivedAddress, type Address } from '@solana/kit';
+import { createAddressWithSeed, getAddressEncoder, getBase64Encoder, getProgramDerivedAddress, type Address } from '@solana/kit';
 import { CommittError } from '../../agent/errors';
 import type { RepoReference } from '../../domain/committ';
 import { hashRepository } from '../campaign';
@@ -14,6 +14,7 @@ import {
   getInitializeMint2Instruction,
   getInitializeTokenMetadataInstruction,
   getMintToInstruction,
+  getUpdateTokenMetadataFieldInstruction,
   getRevokeMintAuthorityInstruction,
 } from './instructions';
 import { TOKEN_DECIMALS, validateTokenDraft, type TokenDraft } from './draft';
@@ -22,6 +23,8 @@ import { TOKEN_DECIMALS, validateTokenDraft, type TokenDraft } from './draft';
 export const MINT_WITH_METADATA_POINTER_SIZE = 234;
 /** Token-2022 account (165) + account type (1) + immutable owner TLV (4). */
 export const TOKEN_ACCOUNT_SIZE = 170;
+/** Solana's maximum serialized transaction size. */
+const MAX_TRANSACTION_BYTES = 1232;
 
 export interface PreparedTokenLaunch {
   message: string;
@@ -36,6 +39,8 @@ export interface PreparedTokenLaunch {
     name: string;
     symbol: string;
     uri: string;
+    description: string;
+    image: string;
     supply: string;
     decimals: number;
     mintAuthority: 'revoked';
@@ -65,27 +70,40 @@ export async function deriveTokenAddresses(creator: Address, repo: RepoReference
   return { seed, mint, tokenAccount };
 }
 
-export function metadataSize(name: string, symbol: string, uri: string): number {
+export function metadataSize(name: string, symbol: string, uri: string, fields: readonly (readonly [string, string])[] = []): number {
   const encoded = (value: string) => 4 + new TextEncoder().encode(value).byteLength;
-  // TLV header + update authority + mint + name + symbol + uri + empty additional-metadata vec
-  return 4 + 32 + 32 + encoded(name) + encoded(symbol) + encoded(uri) + 4;
+  const additional = fields.reduce((total, [key, value]) => total + encoded(key) + encoded(value), 0);
+  // TLV header + update authority + mint + name + symbol + uri + additional-metadata vec
+  return 4 + 32 + 32 + encoded(name) + encoded(symbol) + encoded(uri) + 4 + additional;
+}
+
+/** The metadata URI serves standard token JSON built from the on-chain fields. */
+export function tokenMetadataUri(origin: string, mint: Address): string {
+  const url = new URL('/api/token-metadata', origin);
+  url.searchParams.set('mint', mint);
+  return url.toString();
 }
 
 export async function prepareTokenLaunch(
-  input: { creator: Address; repo: RepoReference; draft: TokenDraft },
+  input: { creator: Address; repo: RepoReference; draft: TokenDraft; metadataOrigin: string },
   dependencies: { rpc?: DevnetRpc } = {},
 ): Promise<PreparedTokenLaunch> {
   const rpc = dependencies.rpc ?? createDevnetRpc();
   const draft = validateTokenDraft(input.draft);
-  const uri = input.repo.canonicalUrl;
   const { seed, mint, tokenAccount } = await deriveTokenAddresses(input.creator, input.repo);
+  const uri = tokenMetadataUri(input.metadataOrigin, mint);
+  const fields = [
+    ['description', draft.description],
+    ['image', draft.image],
+    ['repository', input.repo.canonicalUrl],
+  ] as const;
 
   if (await fetchValidatedAccount(rpc, mint)) {
     throw new CommittError('TOKEN_EXISTS', 'You already created a token for this repository.', 409);
   }
 
   const space = BigInt(MINT_WITH_METADATA_POINTER_SIZE);
-  const totalSize = BigInt(MINT_WITH_METADATA_POINTER_SIZE + metadataSize(draft.name, draft.symbol, uri));
+  const totalSize = BigInt(MINT_WITH_METADATA_POINTER_SIZE + metadataSize(draft.name, draft.symbol, uri, fields));
   const [lamports, tokenAccountRent] = await Promise.all([
     sendDevnetRpcRequest(rpc.getMinimumBalanceForRentExemption(totalSize, { commitment: 'confirmed' })),
     sendDevnetRpcRequest(rpc.getMinimumBalanceForRentExemption(BigInt(TOKEN_ACCOUNT_SIZE), { commitment: 'confirmed' })),
@@ -100,11 +118,16 @@ export async function prepareTokenLaunch(
       getInitializeMetadataPointerInstruction({ mint, authority: input.creator }),
       getInitializeMint2Instruction({ mint, decimals: TOKEN_DECIMALS, mintAuthority: input.creator }),
       getInitializeTokenMetadataInstruction({ mint, authority: input.creator, name: draft.name, symbol: draft.symbol, uri }),
+      ...fields.map(([key, value]) => getUpdateTokenMetadataFieldInstruction({ mint, authority: input.creator, key, value })),
       getCreateAssociatedTokenAccountIdempotentInstruction({ payer: input.creator, ata: tokenAccount, owner: input.creator, mint }),
       getMintToInstruction({ mint, destination: tokenAccount, authority: input.creator, amount }),
       getRevokeMintAuthorityInstruction({ mint, authority: input.creator }),
     ],
   });
+
+  if (getBase64Encoder().encode(transaction.wireBase64).byteLength > MAX_TRANSACTION_BYTES) {
+    throw new CommittError('TOKEN_METADATA_TOO_LARGE', 'The token details are too long for one transaction. Shorten the description or image URL.');
+  }
 
   let simulation;
   try {
@@ -126,6 +149,8 @@ export async function prepareTokenLaunch(
       name: draft.name,
       symbol: draft.symbol,
       uri,
+      description: draft.description,
+      image: draft.image,
       supply: draft.supply.toString(),
       decimals: TOKEN_DECIMALS,
       mintAuthority: 'revoked',
