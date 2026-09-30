@@ -1,5 +1,3 @@
-import { CommittError } from '../agent/errors';
-
 export type RpcFailureKind = 'unauthorized' | 'misconfigured' | 'unavailable';
 
 /** Classify an RPC failure from its message without echoing it (it may contain the endpoint URL). */
