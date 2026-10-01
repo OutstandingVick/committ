@@ -26,6 +26,17 @@ The POST route distinguishes RPC failures so one smoke run identifies the cause:
 
 Error messages never include the endpoint URL or key.
 
+## Vercel
+
+The app also builds as a standard Next.js app for Vercel. `vercel.json` sets `next build` (the npm `build` script targets the Cloudflare/Sites runtime).
+
+1. Import `OutstandingVick/committ` at vercel.com/new. Framework and build command come from `vercel.json`.
+2. Add `COMMITT_SOLANA_RPC_URL` (Helius devnet URL) as a **Sensitive** environment variable for Production and Preview. Optionally add `GITHUB_TOKEN`.
+3. Deploy. Pushes to `main` redeploy automatically.
+4. Verify: `npm run smoke:blink -- <WALLET> --url https://<project>.vercel.app` (public deployments need no sign-in), then open `/api/token-metadata?mint=<mint>` for a created token.
+
+A public deployment exposes the transaction-building API to anyone. It never signs, but each request uses RPC quota; the rate limit is per instance and in memory.
+
 ## Program release gate
 
 1. Run `NO_DNA=1 anchor build` and archive the generated IDL and binary hash.
